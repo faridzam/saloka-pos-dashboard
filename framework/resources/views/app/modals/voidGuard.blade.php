@@ -13,6 +13,7 @@
                         @csrf
                         <input class="form-control mt-2" type="text" id="no_invoice" name="no_invoice" hidden>
                         <input class="form-control mt-2" type="password" id="password" name="password" placeholder="password...">
+                        <input class="form-control mt-2" type="text" id="keterangan" name="keterangan" placeholder="keterangan...">
                         <button type="submit" class="btn btn-primary mt-2">login</button>
                     </form>
                 </div>

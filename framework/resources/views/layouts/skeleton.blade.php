@@ -13,7 +13,10 @@
   src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"
   integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k="
   crossorigin="anonymous"></script>
-
+  
+    <!-- SweetAlert2 -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
   @stack('styles')
 </head>
 

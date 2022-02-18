@@ -20,7 +20,19 @@
       </a>
       <ul class="dropdown-menu">
         <li>
-          <a class="nav-link" href="#">Menu</a>
+          <a class="nav-link" href="dashboardMasterMenu">Menu</a>
+        </li>
+      </ul>
+    </li>
+    
+    <li class="nav-item dropdown" style="cursor: pointer;">
+      <a class="nav-link has-dropdown" data-toggle="dropdown">
+          <i class="fas fa-cubes"></i>
+          <span>Stock</span>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a class="nav-link" href="dashboardStockManagement">Stock Management</a>
         </li>
       </ul>
     </li>

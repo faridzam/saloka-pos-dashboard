@@ -63,10 +63,12 @@ class exportLaporanPenjualan implements FromCollection,WithHeadings,WithStyles,W
         $user = $con['user'];
         $store = $con['store'];
         $totalProfit = $con['totalProfit'];
+        $totalOmset = $con['totalOmset'];
 
         return [["Nama Store:", $store],
         ["User:", $user],
         ["Total Profit:", $totalProfit],
+        ["Total Omset:", $totalOmset],
         [""],
         [""],
         ["Nomor Invoice", "Nama Item", "Quantity", "Hpp", "harga", "total", "profit"]];
@@ -76,7 +78,7 @@ class exportLaporanPenjualan implements FromCollection,WithHeadings,WithStyles,W
     {
         return [
             // Style the first row as bold text.
-            6    => ['font' => ['bold' => true]],
+            7    => ['font' => ['bold' => true]],
         ];
     }
 

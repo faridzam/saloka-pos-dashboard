@@ -30,3 +30,36 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+
+import Swal from 'sweetalert2';
+
+window.deleteItemConfirm = function(e)
+{
+    e.preventDefault();
+    var ele = $(this);
+    var eleId = $('.remove-button').data('id');
+    var eleName = $('.remove-button').data('nama');
+    
+    Swal.fire({
+        icon: 'warning',
+        text: "Apakah anda yakin akan menghapus produk?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yakin!",
+        cancelButtonText: "Gajadi",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '{{ route('masterMenu.destroy') }}',
+                method: "GET",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: eleId,
+                },
+                success: function (response) {
+                    window.location.href = 'dashboardMasterMenu'
+                }
+            });
+        }
+    });
+}

@@ -19,6 +19,7 @@ class CreatePosStockDesktopsTable extends Migration
                 $table->id();
                 $table->string('id_store');
                 $table->string('id_item');
+                $table->string('nama_item');
                 $table->bigInteger('qty');
                 $table->integer('min_qty');
                 $table->timestamps();

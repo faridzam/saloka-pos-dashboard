@@ -18,6 +18,7 @@ use App\Http\Controllers\LoginController;
 
 Route::get('/', [LoginController::class, 'index'])->middleware('guest');
 Route::post('/', [LoginController::class, 'authenticate'])->middleware('guest');
+Route::get('/logout', [LoginController::class, 'logout'])->middleware('auth');
 
 
 Route::resource('dashboard', dashboard::class)->middleware('auth');
@@ -29,4 +30,11 @@ Route::get('dashboardLaporanPenjualan-export','laporanPenjualan@exportLaporanPen
 Route::resource('dashboardVoidTransaksi', VoidLogDesktopController::class)->middleware('auth');
 Route::get('dashboardVoidTransaksi-search', 'VoidLogDesktopController@search')->name('dashboardVoidTransaksi.search')->middleware('auth');
 Route::post('authenticateVoid', 'VoidLogDesktopController@voidVerification')->name('void.verification')->middleware('auth');
-Route::get('void-invoice/{no_invoice}', 'VoidLogDesktopController@voidInvoice')->name('void.invoice')->middleware('auth');
+
+Route::resource('dashboardMasterMenu', masterMenu::class)->middleware('auth');
+Route::get('dashboardMasterMenu-search','masterMenu@search')->name('masterMenu.search')->middleware('auth');
+Route::post('dashboardMasterMenu-update','masterMenu@updateItem')->name('masterMenu.update')->middleware('auth');
+Route::get('dashboardMasterMenu-destroy/{id}','masterMenu@destroyItem')->name('masterMenu.destroy')->middleware('auth');
+
+Route::resource('dashboardStockManagement', stockManagement::class)->middleware('auth');
+Route::get('dashboardStockManagement-search','stockManagement@search')->name('stockManagement.search')->middleware('auth');

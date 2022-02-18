@@ -204,14 +204,44 @@ class VoidLogDesktopController extends Controller
     public function voidVerification(Request $request){
         
         $credentials = $request->validate([
-            'password' => 'required'
+            'password' => 'required',
+            'keterangan' => 'required'
         ]);
         
         $user = Auth::user();
 
         if(Hash::check($request->password, $user->password)){
+            
+            $kasirID = pos_activity_and_desktop::where('no_invoice', $request->no_invoice)
+            ->value('id_kasir');
+            $kasir = pos_kasir_desktop::where('id', $kasirID)
+            ->value('name');
+            
+            $storeID = pos_activity_and_desktop::where('no_invoice', $request->no_invoice)
+            ->value('id_store');
+            $store = pos_store_desktop::where('id_store', $storeID)
+            ->value('id_store');
+            
+            void_log_desktop::create([
+                'no_invoice' => $request->no_invoice,
+                'kasir' => $kasir,
+                'pic' => Auth::user()->name,
+                'id_store' => $store,
+                'keterangan' => $request->keterangan,
+            ]);
+            
+            pos_activity_and_desktop::where('no_invoice', $request->no_invoice)
+            ->delete();
+            
+            $invoices = pos_activity_item_and_desktop::where('no_invoice', $request->no_invoice)->get();
+            foreach ($invoices as $data){
+                
+                $data->isDell = 1;
+                $data->save();
+                
+            }
 
-            return redirect()->intended('/void-invoice/'.$request->no_invoice.'')->with('success', 'login void sukses');
+            return redirect()->intended('dashboardVoidTransaksi')->with('success', 'login void sukses');
         }
         
         return back()->with('failed', 'login void gagal');

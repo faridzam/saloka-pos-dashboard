@@ -174,12 +174,15 @@ class laporanPenjualan extends Controller
         $user  = Auth::user()->name;
 
         $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)->sum('profit');
+        $totalOmset = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)->sum('total');
+        
         $conditions = array(
             'store' => $request->id_store,
             'user' => Auth::user()->name,
             'from' => $from,
             'to' => $to,
             'totalProfit' => $totalProfit,
+            'totalOmset' => $totalOmset,
         );
 
         $export = new exportLaporanPenjualan($conditions);

@@ -182,7 +182,5 @@ bottom: .5em;
   });
 </script>
 
-<script>
-</script>
 
 @endpush
