@@ -102,16 +102,16 @@
             <h4>Statistik</h4>
           </div>
           <div class="card-body row">
-            <h1 class="col-lg-7">Pendapatan</h1>
-            <h1 class="col-lg-5">Total</h1>
-            <canvas class="col-lg-8" id="storeDevelopment"></canvas>
+              <div class="col-8" id="chartjs-penjualan">
+                  @include('../partials/dashboardChartPenjualan')
+              </div>
             <div class="col-4" id="statistik-right">
                 <div class="col-lg-12" id="totalPendapatan">
-                    <h3 style="color:rgba(44, 46, 67, 0.8); margin-top:1rem;">{{ "Rp. ".number_format($profitAll,0,",",".") }}</h3>
+                    <h3 id="profit-all" style="color:rgba(44, 46, 67, 0.8); margin-top:1rem;">{{ "Rp. ".number_format($profitAll,0,",",".") }}</h3>
                     <div class="flex-break"></div>
                     <p style="color:#398AB9;">view all</p>
                     <div class="flex-break"></div>
-                    <p style="color:rgba(44, 46, 67, 0.8); height:100%; font-size: 12px;">pendapatan bulan ini : Rp. {{ number_format($profitBulanIni,0,",",".") }}</p>
+                    <p id="profit-bulan-ini" style="color:rgba(44, 46, 67, 0.8); height:100%; font-size: 12px;">pendapatan bulan ini : Rp. {{ number_format($profitBulanIni,0,",",".") }}</p>
                     <div class="flex-break"></div>
                 </div>
             </div>
@@ -124,15 +124,14 @@
             <h4>history</h4>
           </div>
           <div class="card-body" id="statistik-card">
-            <ul class="list-unstyled list-unstyled-border">
+            <ul class="list-unstyled list-unstyled-border" style="width:100%;">
                   @foreach($historyAktif as $data)
                   <!-- loop -->
                   <li class="media">
                       <img class="mr-3 rounded-circle" width="50" src="{{ asset('framework/public/assets/img/avatar-3.png') }}" alt="avatar">
                       <div class="media-body">
-                        <div class="float-right text-primary">{{$data->created_at}}</div>
+                        <div class="float-right text-primary" style="float-right">{{$data->created_at}}</div>
                         <div class="media-title">{{$data->pic}}</div>
-                      
                         <span class="text-small text-muted">{{Str::limit($data->keterangan,100)}}</span>
                       </div>
                     </li>
@@ -159,55 +158,4 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    //line
-  var ctxL = document.getElementById("storeDevelopment").getContext('2d');
-  var myLineChart = new Chart(ctxL, {
-  type: 'line',
-  data: {
-  labels: ["{{ $monthName[5] }}", "{{ $monthName[4] }}", "{{ $monthName[3] }}", "{{ $monthName[2] }}", "{{ $monthName[1] }}", "{{ $monthName[0] }}"],
-  datasets: [{
-
-    label: "Kedai Adu Tangkas",
-    data: [{{ $profitAduTangkas[0] }}, {{ $profitAduTangkas[1] }}, {{ $profitAduTangkas[2] }}, {{ $profitAduTangkas[3] }}, {{ $profitAduTangkas[4] }}, {{ $profitAduTangkas[5] }}, {{ $profitAduTangkas[6] }}],
-    backgroundColor: [
-      'rgba(105, 0, 132, .2)',
-    ],
-    borderColor: [
-      'rgba(200, 99, 132, .7)',
-    ],
-    borderWidth: 2
-    },
-    
-    {
-    label: "Shop89",
-    data: [{{ $profit89[0] }}, {{ $profit89[1] }}, {{ $profit89[2] }}, {{ $profit89[3] }}, {{ $profit89[4] }}, {{ $profit89[5] }}, {{ $profit89[6] }}],
-    backgroundColor: [
-      'rgba(0, 119, 182, .2)',
-    ],
-    borderColor: [
-      'rgba(3, 83, 164, .7)',
-    ],
-    borderWidth: 2
-    },
-    
-    {
-    label: "Kingdom",
-    data: [{{ $profitKingdom[0] }}, {{ $profitKingdom[1] }}, {{ $profitKingdom[2] }}, {{ $profitKingdom[3] }}, {{ $profitKingdom[4] }}, {{ $profitKingdom[5] }}, {{ $profitKingdom[6] }}],
-    backgroundColor: [
-      'rgba(249, 211, 113, 0.2)',
-    ],
-    borderColor: [
-      'rgba(244, 115, 64, 0.7)',
-    ],
-    borderWidth: 2
-    },
-    
-  ]},
-  options: {
-  responsive: true
-  }
-  });
-  </script>
 @endpush

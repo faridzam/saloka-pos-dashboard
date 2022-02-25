@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\pos_store_desktop;
 use App\pos_stock_desktop;
+use App\log_activity_desktop;
 use App\pos_product_kategori_desktop;
 use App\pos_product_item_desktop;
 
@@ -51,6 +52,13 @@ class masterMenu extends Controller
     public function store(Request $request)
     {
         //
+        
+        log_activity_desktop::create([
+            'pic' => Auth::user()->name,
+            'tipe' => 2,
+            'keterangan' => Auth::user()->name." Telah Menambahkan Produk :"."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item,
+        ]);
+            
         $request->validate([
             'id_item' => 'required',
             'nama_item' => 'required',
@@ -239,7 +247,13 @@ class masterMenu extends Controller
     }
     
     public function updateItem(Request $request){
-
+        
+        log_activity_desktop::create([
+            'pic' => Auth::user()->name,
+            'tipe' => 3,
+            'keterangan' => Auth::user()->name." Telah Mengedit Produk :"."\nid : ".$request->id."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item."\nhpp : ".$request->harga."\nharga : ".$request->harga_jual,
+        ]);
+        
             $request->validate([
                 'id' => 'required',
                 'id_item' => 'required',
@@ -271,6 +285,17 @@ class masterMenu extends Controller
     }
     
      public function destroyItem(Request $request, $id){
+         
+         $data1 = pos_product_item_desktop::where('id', $id)
+         ->value('id_item');
+         $data2 = pos_product_item_desktop::where('id', $id)
+         ->value('nama_item');
+         
+         log_activity_desktop::create([
+            'pic' => Auth::user()->name,
+            'tipe' => 4,
+            'keterangan' => Auth::user()->name." Telah Menghapus Produk :"."\nid : ".$request->id."\nid item : ".$data1."\nnama item : ".$data2,
+        ]);
             
         $produk = pos_product_item_desktop::findOrfail($id);
         $produk->delete();
@@ -278,4 +303,82 @@ class masterMenu extends Controller
         return redirect('dashboardMasterMenu');
     }
     
+    public function addProductAction(Request $request)
+    {
+
+     if($request->ajax())
+     {
+      $outputKategori = '';
+      
+      $store = $request->get('id_store');
+      $cat = $request->get('id_kategori');
+
+      if($store == '-- Silahkan Pilih Store --')
+      {
+          
+         $outputKategori = '
+            <option value="">-- store belum dipilih --</option>
+        ';
+        
+        $dataAdd = array(
+            'kategori_data' => $outputKategori,
+        );
+        
+        echo json_encode($dataAdd);
+        
+      }
+      elseif ($cat == '-- Silahkan Pilih Kategori --') {
+          
+            $kategori = pos_product_kategori_desktop::where('id_store', $store)
+            ->get();
+            
+            foreach ($kategori as $row){
+                $outputKategori .= '
+                    <option value="'.$row->id_kategori.'">'.$row->nama_kategori.'</option>
+                ';
+            }
+            
+        $dataAdd = array(
+            'kategori_data' => $outputKategori,
+        );
+        
+        echo json_encode($dataAdd);
+      }
+      else{
+        $kategori = pos_product_kategori_desktop::where('id_store', $store)
+        ->get();
+        $selected = pos_product_kategori_desktop::where('id_store', $store)
+        ->where('id_kategori', $cat)
+        ->get();
+        $selectedId = $selected->id_kategori;
+        $selectedName = $selected->nama_kategori;
+        
+          foreach ($kategori as $row){
+              if($row->id_kategori != $cat){
+                $outputKategori .= '
+                    <option value="'.$row->id_kategori.'">'.$row->nama_kategori.'</option>
+                ';
+              } else{
+                  $outputKategori .= '
+                    <option value="'.$selectedId.'" selected>'.$selectedName.'</option>
+                ';
+              }
+            }
+            
+            $dataAdd = array(
+            'kategori_data' => $outputKategori,
+        );
+        
+        echo json_encode($dataAdd);
+      }
+      
+      //return \View::make("app.masterMenu")
+        //->with("kategori", $kategori)
+        //->with("user", $user)
+        //->with("stores", $stores)
+        //->render();
+        
+        //return response()->json(['view' => view('kategori', compact('kategori'))->render()]); 
+     }
+    }
 }

@@ -2,18 +2,18 @@
 
 @push('styles')
 <style>
-  table.dataTable thead .sorting:after,
-table.dataTable thead .sorting:before,
-table.dataTable thead .sorting_asc:after,
-table.dataTable thead .sorting_asc:before,
-table.dataTable thead .sorting_asc_disabled:after,
-table.dataTable thead .sorting_asc_disabled:before,
-table.dataTable thead .sorting_desc:after,
-table.dataTable thead .sorting_desc:before,
-table.dataTable thead .sorting_desc_disabled:after,
-table.dataTable thead .sorting_desc_disabled:before {
-bottom: .5em;
-}
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+        bottom: .5em;
+    }
 </style>
 @endpush
 
@@ -29,7 +29,7 @@ bottom: .5em;
       <div class="row">
         <div class="col-12 col-md-6 col-lg-12">
             <div class="card">
-                <form id="formData" action="{{ route('dashboardLaporanPenjualan.export') }}" method="GET">
+                <form id="formData" action="{{ route('dashboardReportItemSales.export') }}" method="GET">
                     <div class="card-body">
                     <label for="provi">Nama Store : </label></br>
                       
@@ -62,23 +62,21 @@ bottom: .5em;
                         <table id="tableIndex" class="table table-striped table-bordered display nowrap" style="width: 100%">
                           <thead clas="bg-dark">
                             <tr>
-                              <th style="width: 20%;">No Invoice</th>
-                              <th style="width: 10%;">ID Kasir</th>
-                              <th style="width: 20%;">Metode Pembayaran</th>
-                              <th style="width: 20%;">Total Pendapatan</th>
-                              <th style="width: 15%;">Tanggal</th>
-                              <th style="width: 15%;">Jam</th>
+                              <th style="width: 15%;">ID Item</th>
+                              <th style="width: 20%;">Nama Item</th>
+                              <th style="width: 15%;">Harga</th>
+                              <th style="width: 10%;">Quantity</th>
+                              <th style="width: 15%;">Total</th>
                             </tr>
                           </thead>
                           <tbody></tbody>
                           <tfoot >
                             <tr>
-                              <th style="width: 10%;"><h4>Profit: </h4></th>
-                              <th style="width: 20%%;"><h4 id="totalProfit" name="totalProfit"></h4></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
+                              <th style="width: 15%;" ><h4>Profit: </h4></th>
+                              <th style="width: 20%;" ><h4 id="totalProfit" name="totalProfit"></h4></th>
+                              <th style="width: 15%;" ></th>
+                              <th style="width: 10%;" ></th>
+                              <th style="width: 15%;" ></th>
                             </tr>
                           </tfoot>
                         </table>
@@ -122,7 +120,7 @@ bottom: .5em;
    function fetch_customer_data(id_store = $('#id_store').val(), tanggalAwal = $('#tanggalAwal').val(), tanggalAkhir = $('#tanggalAkhir').val())
    {
     $.ajax({
-     url:"dashboardLaporanPenjualan-search",
+     url:"dashboardReportItemSales-search",
      method:'GET',
      data:{id_store:id_store, tanggalAwal:tanggalAwal, tanggalAkhir:tanggalAkhir},
      dataType:'json',
@@ -172,7 +170,7 @@ bottom: .5em;
     "searching":   false,
     "info":   false,
     "ordering":   false,
-  ajax: "{{ route('dashboardLaporanPenjualan.search')}}",
+  ajax: "{{ route('dashboardReportItemSales.search')}}",
   columns: [
     { data: 'no_invoice' },
     { data: 'id_kasir' },

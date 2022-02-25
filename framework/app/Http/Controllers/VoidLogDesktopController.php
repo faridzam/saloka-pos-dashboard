@@ -139,7 +139,12 @@ class VoidLogDesktopController extends Controller
       {
        foreach($dataTable as $row)
        {
-        $voidButton = '<a class="btn bg-danger btn-primary border-0 voidRequest" data-toggle="modal" data-target="#invoiceGuard" data-id="'.$row->no_invoice.'" value="'.$row->no_invoice.'">void</a>';
+           if (Auth::user()->id == 1 or Auth::user()->id == 3) {
+               $voidButton = '<a class="btn bg-danger btn-primary border-0 voidRequest" data-toggle="modal" data-target="#invoiceGuard" data-id="'.$row->no_invoice.'" value="'.$row->no_invoice.'">void</a>';
+           } else {
+               $voidButton = '<a class="px-5"></a>';
+           }
+        
         $output .= '
         <tr data-id="'. $row->no_invoice.'">
          <th style="width: 20%;" scope="row">'.$row->no_invoice.'</th>

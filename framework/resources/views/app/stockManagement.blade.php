@@ -2,6 +2,28 @@
 
 @push('styles')
 <style>
+.modal {
+    padding-right: 0px !important;
+}
+.body.open-modal .show {
+    padding-right: 0px !important;
+}
+.modal-dialog {
+    max-width: 100%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-content {
+    padding: 0;
+    height: auto;
+    width: 100vw !important;
+    min-height: 100%;
+    min-width: 100%;
+    border-radius: 0;
+}
 </style>
 @endpush
 
@@ -69,7 +91,7 @@
                     <div class="card-footer bg-whitesmoke">
                         <div class="row justify-content-end">
                         <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                        <a class="btn btn-block btn-success" id="iExportSelect" data-toggle="modal" data-target="#addProduk"><i class="fas fa-file-export mr-2"></i>Tambah Produk</a>
+                        <a class="btn btn-block btn-success" id="iExportSelect" data-toggle="modal" data-target="#addProdukStock"><i class="fas fa-file-export mr-2"></i>Tambah Produk</a>
                         </div>
                         {{-- <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
                         <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>         
@@ -84,11 +106,13 @@
   </section>
   
   <div class="modal-edit">
-      @include('app.modals.editProduk')
+      @include('app.modals.addProdukStock')
   </div>
-  
   <div class="modal-add">
-      @include('app.modals.addProduk')
+      @include('app.modals.minStock')
+  </div>
+  <div class="modal-add">
+      @include('app.modals.plusStock')
   </div>
 @endsection
 
@@ -194,6 +218,39 @@
     function confirmation() {
   return confirm('Yakin menghapus produk?');
 }
+</script>
+
+<script>
+  $(document).ready(function(){
+
+   fetch_add_stock();
+
+   function fetch_add_stock(id_store = $('#add-store').val(), id_item = $('#add-product').val())
+   {
+    $.ajax({
+     url:"dashboardStockManagement-addStock",
+     method:'GET',
+     data:{id_store:id_store, id_item:id_item},
+     dataType:'json',
+     success:function(data)
+     {
+        $('#opt-group-addStock').html(data.kategori_data);
+        $('#id_item_add').val(data.id_item);
+     }
+    })
+   }
+
+   $(document).on('change', 'input', function(){
+    var id_store = $('#add-store').val();
+    var id_item = $('#add-product').val();
+    fetch_add_stock(id_store, id_item);
+   });
+   $(document).on('change', 'select', function(){
+    var id_store = $('#add-store').val();
+    var id_item = $('#add-product').val();
+    fetch_add_stock(id_store, id_item);
+   });
+  });
 </script>
 
 @endpush

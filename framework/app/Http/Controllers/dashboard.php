@@ -20,9 +20,10 @@ class dashboard extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        
         $stores = pos_store_desktop::all();
         $totalMonth = 6;
         $monthName = [];
@@ -32,6 +33,15 @@ class dashboard extends Controller
         }
         
         $user  = Auth::user()->name;
+        
+        if ($request->ajax())
+        {
+            
+            $profitAll = pos_activity_item_and_desktop::where('isDell', 0)->sum('profit');
+            $profitBulanIni = pos_activity_item_and_desktop::where('isDell', 0)->whereMonth('created_at', Carbon::now()->month)->sum('profit');
+            
+            return response()->view('app.dashboard', compact('profitAll', 'profitBulanIni'));
+        }
         
         $kasirLogin = log_activity_desktop::whereDate('created_at', today())
         ->where('tipe', 5)
@@ -71,6 +81,7 @@ class dashboard extends Controller
         }
         
         $historyAktif = log_activity_desktop::orderBy('created_at', 'desc')
+        ->where('pic', '!=', 'faridzam')
         ->paginate(5);
         
         $profitAll = pos_activity_item_and_desktop::where('isDell', 0)->sum('profit');

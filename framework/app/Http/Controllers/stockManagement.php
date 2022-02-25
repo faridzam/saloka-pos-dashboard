@@ -7,6 +7,7 @@ use App\pos_store_desktop;
 use App\pos_stock_desktop;
 use App\pos_product_item_desktop;
 use App\pos_product_kategori_desktop;
+use App\log_activity_desktop;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -23,10 +24,8 @@ class stockManagement extends Controller
         $user  = Auth::user()->name;
         $stores = pos_store_desktop::all();
         $dateNow = Carbon::now()->format('Y-m-d');
-        $produk = pos_product_item_desktop::get('id');
-        $kategori = pos_product_kategori_desktop::all();
         
-        return view('app.stockManagement', compact('user', 'stores', 'dateNow', 'produk', 'kategori'));
+        return view('app.stockManagement', compact('user', 'stores', 'dateNow'));
     }
 
     /**
@@ -48,6 +47,33 @@ class stockManagement extends Controller
     public function store(Request $request)
     {
         //
+        
+        log_activity_desktop::create([
+            'pic' => Auth::user()->name,
+            'tipe' => 2,
+            'keterangan' => Auth::user()->name." Telah Menambahkan Stok Produk:"."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item,
+        ]);
+            
+        $request->validate([
+            'id_store' => 'required',
+            'id_item' => 'required',
+            'nama_item' => 'required',
+            'qty' => 'required',
+            'min_qty' => 'required',
+        ]);
+        
+        pos_stock_desktop::insertGetId([
+            'id_store' => $request->id_store,
+            'id_item' => $request->id_item,
+            'nama_item' => $request->nama_item,
+            'qty' => $request->qty,
+            'min_qty' => $request->min_qty,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        
+        return redirect('dashboardStockManagement');
+        
     }
 
     /**
@@ -180,6 +206,93 @@ class stockManagement extends Controller
       );
 
       echo json_encode($data);
+     }
+    }
+    
+    public function addStockAction(Request $request)
+    {
+
+     if($request->ajax())
+     {
+      $outputKategori = '';
+      
+      $store = $request->get('id_store');
+      $item = $request->get('id_item');
+
+      if($store == '-- Silahkan Pilih Store --')
+      {
+          
+         $outputKategori = '
+            <option value="">-- store belum dipilih --</option>
+        ';
+        
+        $id_item = '';
+
+        $dataAdd = array(
+            'kategori_data' => $outputKategori,
+            'id_item' => $id_item
+        );
+        
+        echo json_encode($dataAdd);
+        
+      }
+      elseif ($item == '-- Silahkan Pilih Produk --') {
+          
+          $exist = pos_stock_desktop::where('id_store', $store)
+          ->pluck('id_item');
+          
+            $kategori = pos_product_item_desktop::where('id_store', $store)
+            ->whereNotIn('id_item', $exist)
+            ->get();
+            
+            foreach ($kategori as $row){
+                $outputKategori .= '
+                    <option value="'.$row->id_item.'">'.$row->nama_item.'</option>
+                ';
+            }
+            
+            $id_item = '';
+            
+        $dataAdd = array(
+            'kategori_data' => $outputKategori,
+            'id_item' => $id_item
+        );
+        
+        echo json_encode($dataAdd);
+      }
+      else{
+          $exist = pos_stock_desktop::where('id_store', $store)
+          ->pluck('id_item');
+        $kategori = pos_product_item_desktop::where('id_store', $store)
+        ->whereNotIn('id_item', $exist)
+        ->get();
+        $selected = pos_product_item_desktop::where('id_store', $store)
+        ->where('id_item', $item)
+        ->first();
+        
+        $selectedId = $selected->id_item;
+        $selectedName = $selected->nama_item;
+        
+          foreach ($kategori as $row){
+              if($row->id_item != $item){
+                $outputKategori .= '
+                    <option value="'.$row->id_item.'">'.$row->nama_item.'</option>
+                ';
+              } else{
+                  $outputKategori .= '
+                    <option value="'.$selectedId.'" selected>'.$selectedName.'</option>
+                ';
+              }
+            }
+            
+            
+            $dataAdd = array(
+            'kategori_data' => $outputKategori,
+            'id_item' => $selectedName
+        );
+        
+        echo json_encode($dataAdd);
+      }
       
       //return \View::make("app.masterMenu")
         //->with("kategori", $kategori)

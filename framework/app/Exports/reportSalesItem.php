@@ -3,7 +3,7 @@
 namespace App\Exports;
 
 use App\pos_activity_item_and_desktop;
-use App\void_log_desktop;
+use Illuminate\Support\Facades\DB;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -22,7 +22,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class exportLaporanPenjualan implements FromCollection,WithHeadings,WithStyles,WithColumnWidths,WithEvents//,WithColumnFormatting
+class reportSalesItem implements FromCollection,WithHeadings,WithStyles,WithColumnWidths,WithEvents//,WithColumnFormatting
 {
 
     /**
@@ -43,19 +43,33 @@ class exportLaporanPenjualan implements FromCollection,WithHeadings,WithStyles,W
         $to = $con['to'];
         $store = $con['store'];
 
-        $data1 = pos_activity_item_and_desktop::select('no_invoice', 'nama_item', 'qty', 'hpp', 'harga', 'total', 'profit')
+        $data1 = pos_activity_item_and_desktop::distinct()
         ->where('id_store', $store)
         ->where('isDell', 0)
         ->whereBetween('created_at', [$from, $to])
-        ->get();
+        ->get(['id_item', 'nama_item']);
         
-        $data2 = void_log_desktop::select('no_invoice', 'kasir', 'pic', 'id_store', 'keterangan')
-        ->where('id_store', $store)
-        ->whereBetween('created_at', [$from, $to])
-        ->get();
+        $data = collect([]);
+        $totalQuantity = 0;
         
-
-        return $data1;
+        foreach ($data1 as $value) {
+            $id_item = $value->id_item;
+            $nama_item = $value->nama_item;
+            $quantity = pos_activity_item_and_desktop::where('id_item', $value->id_item)
+            ->where('isDell', 0)
+            ->where('id_store', $store)
+            ->whereBetween('created_at', [$from, $to])
+            ->sum('qty');
+            $total = pos_activity_item_and_desktop::where('id_item', $value->id_item)
+            ->where('isDell', 0)
+            ->where('id_store', $store)
+            ->whereBetween('created_at', [$from, $to])
+            ->sum('total');
+            
+            $data->push(['id_item'=>$id_item, 'nama_item'=>$nama_item, 'qty'=>$quantity, 'total'=>$total]);
+        }
+        
+        return $data;
     }
 
     public function headings(): array
@@ -72,7 +86,7 @@ class exportLaporanPenjualan implements FromCollection,WithHeadings,WithStyles,W
         ["Total Omset:", $totalOmset],
         [""],
         [""],
-        ["Nomor Invoice", "Nama Item", "Quantity", "Hpp", "harga", "total", "profit"]];
+        ["ID Item", "Nama Item", "Quantity", "Total"]];
     }
 
     public function styles(Worksheet $sheet)

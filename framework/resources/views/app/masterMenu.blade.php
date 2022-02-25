@@ -2,6 +2,32 @@
 
 @push('styles')
 <style>
+
+#addProduk {
+    padding-right: 0px !important;
+}
+.modal {
+    padding-right: 0px !important;
+}
+.body.open-modal .show {
+    padding-right: 0px !important;
+}
+.modal-dialog {
+    max-width: 100%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-content {
+    padding: 0;
+    height: auto;
+    width: 100vw !important;
+    min-height: 100%;
+    min-width: 100%;
+    border-radius: 0;
+}
 </style>
 @endpush
 
@@ -71,7 +97,7 @@
                     <div class="card-footer bg-whitesmoke">
                         <div class="row justify-content-end">
                         <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                        <a class="btn btn-block btn-success" id="iExportSelect" data-toggle="modal" data-target="#addProduk"><i class="fas fa-file-export mr-2"></i>Tambah Produk</a>
+                        <a type="button" class="btn btn-block btn-success" id="iExportSelect" data-toggle="modal" data-target="#addProduk"><i class="fas fa-file-export mr-2"></i>Tambah Produk</a>
                         </div>
                         {{-- <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
                         <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>         
@@ -110,7 +136,7 @@
 
    fetch_customer_data();
 
-   function fetch_customer_data(id_store = $('#id_store').val(), id_kategori = $('#ifYes').val())
+   function fetch_customer_data(id_store = $('#store').val(), id_kategori = $('#ifYes').val())
    {
     $.ajax({
      url:"dashboardMasterMenu-search",
@@ -145,10 +171,12 @@
 <script>
   $(document).ready(function () {
   $('#tableIndex').DataTable({
-  "scrollY": "300px",
-  "scrollCollapse": true,
-  "paging":   false,
-  "searching":   false,
+    "scrollY": "300px",
+    "scrollCollapse": true,
+    "paging":   false,
+    "searching":   false,
+    "info":   false,
+    "ordering":   false,
   ajax: "{{ route('dashboardLaporanPenjualan.search')}}",
   columns: [
     { data: 'no_invoice' },
@@ -196,6 +224,70 @@
     function confirmation() {
   return confirm('Yakin menghapus produk?');
 }
+</script>
+
+<script>
+  $(document).ready(function(){
+
+   fetch_add_data();
+
+   function fetch_add_data(id_store = $('#add-store').val(), id_kategori = $('#add-kategori').val())
+   {
+    $.ajax({
+     url:"dashboardMasterMenu-addProductAction",
+     method:'GET',
+     data:{id_store:id_store, id_kategori:id_kategori},
+     dataType:'json',
+     success:function(data)
+     {
+        $('#add-group-category').html(data.kategori_data);
+     }
+    })
+   }
+
+   $(document).on('change', 'input', function(){
+    var id_store = $('#add-store').val();
+    var id_kategori = $('#add-kategori').val();
+    fetch_add_data(id_store, id_kategori);
+   });
+   $(document).on('change', 'select', function(){
+    var id_store = $('#add-store').val();
+    var id_kategori = $('#add-kategori').val();
+    fetch_add_data(id_store, id_kategori);
+   });
+  });
+</script>
+
+<script>
+    $(function () {
+        $('#addProduk-close').on('click', function () {
+            $('#addProduk').hide('hide');
+            $('body').removeClass('modal-open');
+            $('#addProduk').removeClass('show');
+            $('body').removeAttr('style');
+            $('#addProduk').removeAttr('aria-modal');
+            $('#addProduk').removeAttr('style', 'padding-right');
+            $('#addProduk').css('display', 'none');
+            $('#addProduk').attr('aria-hidden', true);
+            $('.modal-backdrop').remove();
+        })
+    })
+</script>
+
+<script>
+    $(function () {
+        $('#editProduk-close').on('click', function () {
+            $('#editProduk').hide('hide');
+            $('body').removeClass('modal-open');
+            $('#editProduk').removeClass('show');
+            $('body').removeAttr('style');
+            $('#editProduk').removeAttr('aria-modal');
+            $('#editProduk').removeAttr('style', 'padding-right');
+            $('#editProduk').css('display', 'none');
+            $('#editProduk').attr('aria-hidden', true);
+            $('.modal-backdrop').remove();
+        })
+    })
 </script>
 
 @endpush

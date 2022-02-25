@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\login;
 use App\User;
+use App\log_activity_desktop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -98,6 +99,13 @@ class LoginController extends Controller
         ]);
 
         if(Auth::attempt($credentials)){
+            
+            log_activity_desktop::create([
+                'pic' => $request->name,
+                'tipe' => 7,
+                'keterangan' => $request->name." memasuki dashboard admin POS",
+            ]);
+            
             $request->session()->regenerate();
 
             return redirect()->intended('/dashboard');
@@ -108,6 +116,13 @@ class LoginController extends Controller
 
     public function logout(Request $request)
         {
+            
+            log_activity_desktop::create([
+                'pic' => Auth::user()->name,
+                'tipe' => 8,
+                'keterangan' => Auth::user()->name." meninggalkan dashboard admin POS",
+            ]);
+            
             Auth::logout();
 
             $request->session()->invalidate();

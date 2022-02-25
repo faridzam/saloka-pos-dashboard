@@ -46,6 +46,9 @@
         <li>
           <a class="nav-link" href="dashboardLaporanPenjualan">Laporan Penjualan</a>
         </li>
+        <li>
+          <a class="nav-link" href="dashboardReportItemSales">Report Item Sales</a>
+        </li>
       </ul>
     </li>
 
@@ -61,7 +64,7 @@
       </ul>
     </li>
 
-    <li class="menu-header">Users</li>
-    <li><a class="nav-link" href=""><i class="fas fa-users"></i> <span>Users</span></a></li>
+    {{--<li class="menu-header">Users</li>
+    <li><a class="nav-link" href=""><i class="fas fa-users"></i> <span>Users</span></a></li>--}}
   </ul>
 </aside>

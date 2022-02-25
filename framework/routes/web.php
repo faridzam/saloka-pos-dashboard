@@ -16,7 +16,7 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-Route::get('/', [LoginController::class, 'index'])->middleware('guest');
+Route::get('/', [LoginController::class, 'index'])->middleware('guest')->name('login.page');
 Route::post('/', [LoginController::class, 'authenticate'])->middleware('guest');
 Route::get('/logout', [LoginController::class, 'logout'])->middleware('auth');
 
@@ -27,14 +27,20 @@ Route::resource('dashboardLaporanPenjualan', laporanPenjualan::class)->middlewar
 Route::get('dashboardLaporanPenjualan-search','laporanPenjualan@search')->name('dashboardLaporanPenjualan.search')->middleware('auth');
 Route::get('dashboardLaporanPenjualan-export','laporanPenjualan@exportLaporanPenjualan')->name('dashboardLaporanPenjualan.export')->middleware('auth');
 
+Route::resource('dashboardReportItemSales', dashboardReportItemSales::class)->middleware('auth');
+Route::get('dashboardReportItemSales-search','dashboardReportItemSales@search')->name('dashboardReportItemSales.search')->middleware('auth');
+Route::get('dashboardReportItemSales-export','dashboardReportItemSales@exportLaporanPenjualan')->name('dashboardReportItemSales.export')->middleware('auth');
+
 Route::resource('dashboardVoidTransaksi', VoidLogDesktopController::class)->middleware('auth');
 Route::get('dashboardVoidTransaksi-search', 'VoidLogDesktopController@search')->name('dashboardVoidTransaksi.search')->middleware('auth');
 Route::post('authenticateVoid', 'VoidLogDesktopController@voidVerification')->name('void.verification')->middleware('auth');
 
 Route::resource('dashboardMasterMenu', masterMenu::class)->middleware('auth');
 Route::get('dashboardMasterMenu-search','masterMenu@search')->name('masterMenu.search')->middleware('auth');
+Route::get('dashboardMasterMenu-addProductAction','masterMenu@addProductAction')->name('masterMenu.add.product.action')->middleware('auth');
 Route::post('dashboardMasterMenu-update','masterMenu@updateItem')->name('masterMenu.update')->middleware('auth');
 Route::get('dashboardMasterMenu-destroy/{id}','masterMenu@destroyItem')->name('masterMenu.destroy')->middleware('auth');
 
 Route::resource('dashboardStockManagement', stockManagement::class)->middleware('auth');
 Route::get('dashboardStockManagement-search','stockManagement@search')->name('stockManagement.search')->middleware('auth');
+Route::get('dashboardStockManagement-addStock','stockManagement@addStockAction')->name('stockManagement.addStockAction')->middleware('auth');

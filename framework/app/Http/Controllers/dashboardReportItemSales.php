@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 use App\pos_activity_and_desktop;
 use Illuminate\Support\Facades\Auth;
 use App\pos_activity_item_and_desktop;
-use App\Exports\exportLaporanPenjualan;
+use App\Exports\reportSalesItem;
 use Maatwebsite\Excel\Facades\Excel;
 
-class laporanPenjualan extends Controller
+class dashboardReportItemSales extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +26,7 @@ class laporanPenjualan extends Controller
         $stores = pos_store_desktop::all();
         $dateNow = Carbon::now()->format('Y-m-d');
 
-        return view('app.laporanPenjualan', compact('user', 'stores', 'dateNow'));
+        return view('app.reportItemSales', compact('user', 'stores', 'dateNow'));
     }
 
     /**
@@ -94,7 +94,7 @@ class laporanPenjualan extends Controller
     {
         //
     }
-
+    
     public function search(Request $request)
     {
 
@@ -112,12 +112,41 @@ class laporanPenjualan extends Controller
         ->orderBy('created_at', 'desc')
         ->pluck('no_invoice');
 
-        $dataTable = pos_activity_and_desktop::whereIn('no_invoice', $dataQuery)
-        ->get();
+        $dataTable = pos_activity_item_and_desktop::distinct()
+        ->whereIn('no_invoice', $dataQuery)
+        ->where('isDell', 0)
+        ->get('id_item', 'nama_item', 'harga', 'qty', 'total', 'created_at');
         
         $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $dataQuery)
         ->where('isDell', 0)
         ->sum('total');
+        
+        $data = collect([]);
+
+        foreach ($dataTable as $value) {
+            $id_item = $value->id_item;
+            $nama_item = pos_activity_item_and_desktop::where('id_item', $value->id_item)
+            ->where('isDell', 0)
+            ->where('id_store', $store)
+            ->value('nama_item');
+            $harga = pos_activity_item_and_desktop::where('id_item', $value->id_item)
+            ->where('isDell', 0)
+            ->where('id_store', $store)
+            ->value('harga');
+            $quantity = pos_activity_item_and_desktop::where('id_item', $value->id_item)
+            ->where('isDell', 0)
+            ->where('id_store', $store)
+            ->whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
+            ->sum('qty');
+            $total = pos_activity_item_and_desktop::where('id_item', $value->id_item)
+            ->where('isDell', 0)
+            ->where('id_store', $store)
+            ->whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
+            ->sum('total');
+            
+            $data->push(['id_item'=>$id_item, 'nama_item'=>$nama_item, 'harga'=>$harga, 'qty'=>$quantity, 'total'=>$total]);
+        }
+        
       }
       else
       {
@@ -133,16 +162,15 @@ class laporanPenjualan extends Controller
       $total_row = $dataTable->count();
       if($total_row > 0)
       {
-       foreach($dataTable as $row)
+       foreach($data as $row)
        {
         $output .= '
-        <tr data-id="'. $row->no_invoice.'">
-         <th style="width: 20%;" scope="row">'.$row->no_invoice.'</th>
-         <td style="width: 10%;" >'.$row->id_kasir.'</td>
-         <td style="width: 20%;" >'.$row->metode.'</td>
-         <td style="width: 20%;" >'."Rp. ".number_format($row->total_pembelian,0,",",".").'</td>
-         <td style="width: 15%;" >'.date('d-m-Y', strtotime($row->created_at)).'</td>
-         <td style="width: 15%;" >'.date('H:i:s', strtotime($row->created_at)).'</td>
+        <tr data-id="'.$row['id_item'].'">
+         <th style="width: 15%;" scope="row" >'.$row['id_item'].'</th>
+         <td style="width: 20%;" >'.$row['nama_item'].'</td>
+         <td style="width: 15%;" >'."Rp. ".number_format($row['harga'],0,",",".").'</td>
+         <td style="width: 10%;" >'.$row['qty'].'</td>
+         <td style="width: 15%;" >'."Rp. ".number_format($row['total'],0,",",".").'</td>
         </tr>
         ';
        }
@@ -202,7 +230,7 @@ class laporanPenjualan extends Controller
             'totalOmset' => $totalOmset,
         );
 
-        $export = new exportLaporanPenjualan($conditions);
+        $export = new reportSalesItem($conditions);
 
         return Excel::download($export, 'report-'.$store.'.xlsx');
     }
