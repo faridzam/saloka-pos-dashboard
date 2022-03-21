@@ -23,7 +23,11 @@ class masterMenu extends Controller
     {
         //
         $user  = Auth::user()->name;
-        $stores = pos_store_desktop::all();
+        
+        $stores = pos_store_desktop::select('menu_store', 'nama_store')
+        ->distinct()
+        ->get();
+        
         $dateNow = Carbon::now()->format('Y-m-d');
         
         $produk = pos_product_item_desktop::get('id');
@@ -254,37 +258,37 @@ class masterMenu extends Controller
             'keterangan' => Auth::user()->name." Telah Mengedit Produk :"."\nid : ".$request->id."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item."\nhpp : ".$request->harga."\nharga : ".$request->harga_jual,
         ]);
         
-            $request->validate([
-                'id' => 'required',
-                'id_item' => 'required',
-                'nama_item' => 'required',
-                'id_kategori' => 'required',
-                'id_store' => 'required',
-                'harga' => 'required',
-                'pajak' => 'required',
-                'harga_jual' => 'required',
-            ]);
+        $request->validate([
+            'id' => 'required',
+            'id_item' => 'required',
+            'nama_item' => 'required',
+            'id_kategori' => 'required',
+            'id_store' => 'required',
+            'harga' => 'required',
+            'pajak' => 'required',
+            'harga_jual' => 'required',
+        ]);
             
-                $produk = pos_product_item_desktop::findOrfail($request->id);
-                
-                $produk->update([
-                    'id' => $request->id,
-                    'id_item' => $request->id_item,
-                    'nama_item' => $request->nama_item,
-                    'id_kategori' => $request->id_kategori,
-                    'id_store' => $request->id_store,
-                    'harga' => $request->harga,
-                    'pajak' => $request->pajak,
-                    'harga_jual' => $request->harga_jual,
-                    'isDell' => $request->isDell,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ]);
+        $produk = pos_product_item_desktop::findOrfail($request->id);
+        
+        $produk->update([
+            'id' => $request->id,
+            'id_item' => $request->id_item,
+            'nama_item' => $request->nama_item,
+            'id_kategori' => $request->id_kategori,
+            'id_store' => $request->id_store,
+            'harga' => $request->harga,
+            'pajak' => $request->pajak,
+            'harga_jual' => $request->harga_jual,
+            'isDell' => $request->isDell,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
             
-            return redirect('dashboardMasterMenu');
+        return redirect('dashboardMasterMenu');
     }
     
-     public function destroyItem(Request $request, $id){
+    public function destroyItem(Request $request, $id){
          
          $data1 = pos_product_item_desktop::where('id', $id)
          ->value('id_item');

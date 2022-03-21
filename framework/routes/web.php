@@ -33,7 +33,7 @@ Route::get('dashboardReportItemSales-export','dashboardReportItemSales@exportLap
 
 Route::resource('dashboardVoidTransaksi', VoidLogDesktopController::class)->middleware('auth');
 Route::get('dashboardVoidTransaksi-search', 'VoidLogDesktopController@search')->name('dashboardVoidTransaksi.search')->middleware('auth');
-Route::post('authenticateVoid', 'VoidLogDesktopController@voidVerification')->name('void.verification')->middleware('auth');
+Route::post('authenticateVoid', 'VoidLogDesktopController@voidVerification')->name('void.verification')->middleware('auth')->middleware('roleChecker:void');
 
 Route::resource('dashboardMasterMenu', masterMenu::class)->middleware('auth');
 Route::get('dashboardMasterMenu-search','masterMenu@search')->name('masterMenu.search')->middleware('auth');
@@ -41,6 +41,21 @@ Route::get('dashboardMasterMenu-addProductAction','masterMenu@addProductAction')
 Route::post('dashboardMasterMenu-update','masterMenu@updateItem')->name('masterMenu.update')->middleware('auth');
 Route::get('dashboardMasterMenu-destroy/{id}','masterMenu@destroyItem')->name('masterMenu.destroy')->middleware('auth');
 
+Route::resource('dashboardDiscount', discount::class)->middleware('auth');
+Route::get('dashboardDiscount-search','discount@search')->name('dashboardDiscount.search')->middleware('auth');
+Route::get('dashboardDiscount-destroy/{id}','discount@destroyDiscount')->name('dashboardDiscount.destroy')->middleware('auth');
+
+Route::resource('dashboardSpecialPrice', specialPrice::class)->middleware('auth');
+Route::get('dashboardSpecialPrice-search','specialPrice@search')->name('dashboardSpecialPrice.search')->middleware('auth');
+Route::get('dashboardSpecialPrice-destroy/{id}','specialPrice@destroySpecialPrice')->name('dashboardSpecialPrice.destroy')->middleware('auth');
+
 Route::resource('dashboardStockManagement', stockManagement::class)->middleware('auth');
 Route::get('dashboardStockManagement-search','stockManagement@search')->name('stockManagement.search')->middleware('auth');
 Route::get('dashboardStockManagement-addStock','stockManagement@addStockAction')->name('stockManagement.addStockAction')->middleware('auth');
+Route::get('dashboardStockManagement-plusStock','stockManagement@plusStock')->name('stockManagement.plusStock')->middleware('auth');
+Route::get('dashboardStockManagement-minStock','stockManagement@minStock')->name('stockManagement.minStock')->middleware('auth');
+
+Route::resource('dashboardUsers', users::class)->middleware('auth')->middleware('roleChecker:users');
+Route::get('dashboardUsers-search','users@search')->name('dashboardUsers.search')->middleware('auth');
+Route::get('dashboardUsers-destroyKasir/{id}','users@destroyKasir')->name('dashboardUsers.destroyKasir')->middleware('auth');
+Route::get('dashboardUsers-destroyAdmin/{id}','users@destroyAdmin')->name('dashboardUsers.destroyAdmin')->middleware('auth');

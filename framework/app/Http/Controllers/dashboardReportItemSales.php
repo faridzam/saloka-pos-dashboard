@@ -23,7 +23,9 @@ class dashboardReportItemSales extends Controller
     {
         //
         $user  = Auth::user()->name;
-        $stores = pos_store_desktop::all();
+        $stores = pos_store_desktop::select('menu_store', 'nama_store')
+        ->distinct()
+        ->get();
         $dateNow = Carbon::now()->format('Y-m-d');
 
         return view('app.reportItemSales', compact('user', 'stores', 'dateNow'));
@@ -107,7 +109,7 @@ class dashboardReportItemSales extends Controller
 
       if($store != '-- Silahkan Pilih Store --')
       {
-        $dataQuery = pos_activity_and_desktop::where('id_store', $store)
+        $dataQuery = pos_activity_and_desktop::where('menu_store', $store)
         ->whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
         ->orderBy('created_at', 'desc')
         ->pluck('no_invoice');
@@ -127,20 +129,20 @@ class dashboardReportItemSales extends Controller
             $id_item = $value->id_item;
             $nama_item = pos_activity_item_and_desktop::where('id_item', $value->id_item)
             ->where('isDell', 0)
-            ->where('id_store', $store)
+            ->where('menu_store', $store)
             ->value('nama_item');
             $harga = pos_activity_item_and_desktop::where('id_item', $value->id_item)
             ->where('isDell', 0)
-            ->where('id_store', $store)
+            ->where('menu_store', $store)
             ->value('harga');
             $quantity = pos_activity_item_and_desktop::where('id_item', $value->id_item)
             ->where('isDell', 0)
-            ->where('id_store', $store)
+            ->where('menu_store', $store)
             ->whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
             ->sum('qty');
             $total = pos_activity_item_and_desktop::where('id_item', $value->id_item)
             ->where('isDell', 0)
-            ->where('id_store', $store)
+            ->where('menu_store', $store)
             ->whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
             ->sum('total');
             
@@ -199,7 +201,7 @@ class dashboardReportItemSales extends Controller
         $store = pos_store_desktop::where('id_store', $request->id_store)->value('nama_store');
         $from = $request->tanggalAwal." 00:00:00";
         $to = $request->tanggalAkhir." 23:59:59";
-        $invoices = pos_activity_and_desktop::where('id_store', $request->id_store)
+        $invoices = pos_activity_and_desktop::where('menu_store', $request->id_store)
         ->whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])
         ->pluck('no_invoice')
         ->toArray();

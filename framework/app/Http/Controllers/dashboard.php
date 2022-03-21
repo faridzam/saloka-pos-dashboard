@@ -24,7 +24,9 @@ class dashboard extends Controller
     {
         //
         
-        $stores = pos_store_desktop::all();
+        $stores = pos_store_desktop::select('menu_store', 'nama_store')
+        ->distinct()
+        ->get();
         $totalMonth = 6;
         $monthName = [];
         for ($i=$totalMonth; $i >= 0; $i--) { 
@@ -51,7 +53,7 @@ class dashboard extends Controller
         ->count();
         $kasirAktif = $kasirLogin - $kasirLogout;
         
-        $storeAktif = pos_store_desktop::count();
+        $storeAktif = $stores->count();
         $voidToday = void_log_desktop::whereDate('created_at', today())
         ->count();
         $produkAktif = pos_product_item_desktop::distinct('id_item')->count();
@@ -60,7 +62,7 @@ class dashboard extends Controller
         for ($i=$totalMonth; $i >= 0; $i--) { 
             $profitAduTangkas[$i] = pos_activity_item_and_desktop::whereMonth('created_at', Carbon::now()->subMonth(5-$i))
             ->where('isDell', 0)
-            ->where('id_store', 9)
+            ->where('menu_store', 9)
             ->sum('profit');
         }
         
@@ -68,7 +70,7 @@ class dashboard extends Controller
         for ($i=$totalMonth; $i >= 0; $i--) { 
             $profit89[$i] = pos_activity_item_and_desktop::whereMonth('created_at', Carbon::now()->subMonth(5-$i))
             ->where('isDell', 0)
-            ->where('id_store', 10)
+            ->where('menu_store', 10)
             ->sum('profit');
         }
         
@@ -76,7 +78,7 @@ class dashboard extends Controller
         for ($i=$totalMonth; $i >= 0; $i--) { 
             $profitKingdom[$i] = pos_activity_item_and_desktop::whereMonth('created_at', Carbon::now()->subMonth(5-$i))
             ->where('isDell', 0)
-            ->where('id_store', 3)
+            ->where('menu_store', 3)
             ->sum('profit');
         }
         

@@ -44,7 +44,7 @@ class exportLaporanPenjualan implements FromCollection,WithHeadings,WithStyles,W
         $store = $con['store'];
 
         $data1 = pos_activity_item_and_desktop::select('no_invoice', 'nama_item', 'qty', 'hpp', 'harga', 'total', 'profit')
-        ->where('id_store', $store)
+        ->where('menu_store', $store)
         ->where('isDell', 0)
         ->whereBetween('created_at', [$from, $to])
         ->get();

@@ -2,17 +2,10 @@
 
 @push('styles')
 <style>
-  table.dataTable thead .sorting:after,
-table.dataTable thead .sorting:before,
-table.dataTable thead .sorting_asc:after,
-table.dataTable thead .sorting_asc:before,
-table.dataTable thead .sorting_asc_disabled:after,
-table.dataTable thead .sorting_asc_disabled:before,
-table.dataTable thead .sorting_desc:after,
-table.dataTable thead .sorting_desc:before,
-table.dataTable thead .sorting_desc_disabled:after,
-table.dataTable thead .sorting_desc_disabled:before {
-bottom: .5em;
+  table {
+  display: block;
+  height: 350px;
+  overflow-y: scroll;
 }
 </style>
 @endpush
@@ -36,7 +29,7 @@ bottom: .5em;
                         <select class="custom-select" style="width: 49.5%; margin-bottom: 1rem;" id="id_store" name="id_store" required>
                           <option selected>-- Silahkan Pilih Store --</option>
                           @foreach ($stores as $store)
-                              <option value={{ $store->id_store }}>{{ $store->nama_store }}</option>
+                              <option value={{ $store->menu_store }}>{{ $store->nama_store }}</option>
                           @endforeach
                         </select>
                       
@@ -59,7 +52,7 @@ bottom: .5em;
 
                         </div>
                         <div class="form-group">
-                        <table id="tableIndex" class="table table-striped table-bordered display nowrap" style="width: 100%">
+                        <table id="tableIndex" class="table table-striped table-bordered display nowrap sortable" style="width: 100%">
                           <thead clas="bg-dark">
                             <tr>
                               <th style="width: 20%;">No Invoice</th>
@@ -163,26 +156,16 @@ bottom: .5em;
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
 
-<script>
-  $(document).ready(function () {
-  $('#tableIndex').DataTable({
-    "scrollY": "300px",
-    "scrollCollapse": true,
-    "paging":   false,
-    "searching":   false,
-    "info":   false,
-    "ordering":   false,
-  ajax: "{{ route('dashboardLaporanPenjualan.search')}}",
-  columns: [
-    { data: 'no_invoice' },
-    { data: 'id_kasir' },
-    { data: 'metode' },
-    { data: 'total_pembelian' },
-  ]
-  });
-  $('.dataTables_length').addClass('bs-select');
-  });
-</script>
 
+<link rel="stylesheet" href="https://drvic10k.github.io/bootstrap-sortable/Contents/bootstrap-sortable.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.js"></script>
+<script src="https://drvic10k.github.io/bootstrap-sortable/Scripts/bootstrap-sortable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<script>
+    $('.sortable').sortable();
+</script>
 
 @endpush

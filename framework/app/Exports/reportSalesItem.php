@@ -44,7 +44,7 @@ class reportSalesItem implements FromCollection,WithHeadings,WithStyles,WithColu
         $store = $con['store'];
 
         $data1 = pos_activity_item_and_desktop::distinct()
-        ->where('id_store', $store)
+        ->where('menu_store', $store)
         ->where('isDell', 0)
         ->whereBetween('created_at', [$from, $to])
         ->get(['id_item', 'nama_item']);
@@ -57,12 +57,12 @@ class reportSalesItem implements FromCollection,WithHeadings,WithStyles,WithColu
             $nama_item = $value->nama_item;
             $quantity = pos_activity_item_and_desktop::where('id_item', $value->id_item)
             ->where('isDell', 0)
-            ->where('id_store', $store)
+            ->where('menu_store', $store)
             ->whereBetween('created_at', [$from, $to])
             ->sum('qty');
             $total = pos_activity_item_and_desktop::where('id_item', $value->id_item)
             ->where('isDell', 0)
-            ->where('id_store', $store)
+            ->where('menu_store', $store)
             ->whereBetween('created_at', [$from, $to])
             ->sum('total');
             

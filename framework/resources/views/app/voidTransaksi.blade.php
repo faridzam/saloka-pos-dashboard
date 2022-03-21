@@ -31,7 +31,7 @@
                         <select class="custom-select" style="width: 49.5%; margin-bottom: 1rem;" id="id_store" name="id_store" required>
                           <option selected>-- Silahkan Pilih Store --</option>
                           @foreach ($stores as $store)
-                              <option value={{ $store->id_store }}>{{ $store->nama_store }}</option>
+                              <option value={{ $store->menu_store }}>{{ $store->nama_store }}</option>
                           @endforeach
                         </select>
                       
@@ -202,6 +202,8 @@
   "scrollCollapse": true,
   "paging":   false,
   "searching":   false,
+  "info":   false,
+  "ordering":   false,
   ajax: "{{ route('dashboardVoidTransaksi.search')}}",
   columns: [
     { data: 'no_invoice' },

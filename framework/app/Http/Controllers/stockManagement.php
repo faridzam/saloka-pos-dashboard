@@ -22,7 +22,9 @@ class stockManagement extends Controller
     {
         //
         $user  = Auth::user()->name;
-        $stores = pos_store_desktop::all();
+        $stores = pos_store_desktop::select('menu_store', 'nama_store')
+        ->distinct()
+        ->get();
         $dateNow = Carbon::now()->format('Y-m-d');
         
         return view('app.stockManagement', compact('user', 'stores', 'dateNow'));
@@ -51,7 +53,7 @@ class stockManagement extends Controller
         log_activity_desktop::create([
             'pic' => Auth::user()->name,
             'tipe' => 2,
-            'keterangan' => Auth::user()->name." Telah Menambahkan Stok Produk:"."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item,
+            'keterangan' => Auth::user()->name." Telah Menambahkan Stok Produk:"."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item."\nqty : ".$request->qty,
         ]);
             
         $request->validate([
@@ -174,8 +176,8 @@ class stockManagement extends Controller
       {
        foreach($dataTable as $row)
        {
-            $editButton= '<a class="btn btn-primary btn-lg open-modal" href="'.route('dashboardMasterMenu.edit', $row->id).'" data-toggle="modal" data-target="#editProduk" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-kategori="'.$row->id_kategori.'" data-store="'.$row->id_store.'" data-harga="'.$row->harga.'" data-pajak="'.$row->pajak.'" data-harga_jual="'.$row->harga_jual.'" value='.$row->id.'> <i class="fas fa-edit"></i> </a>';
-            $removeButton= '<a class="remove-product" href="dashboardMasterMenu-destroy/'.$row->id.'" onclick="return confirmation();"><button class="btn btn-danger btn-lg remove-button" data-id="'.$row->id.'" data-nama="'.$row->nama_item.'"> <i class="fas fa-trash"></i> </button></a>';
+            $plusButton= '<a class="btn btn-primary btn-lg open-modal" data-toggle="modal" data-target="#plusStock" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-qty="'.$row->qty.'" data-min_qty="'.$row->min_qty.'" value='.$row->id.'> <i class="fas fa-plus"></i> </a>';
+            $removeButton= '<a class="btn btn-danger btn-lg open-modal-min" data-toggle="modal" data-target="#minStock" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-qty="'.$row->qty.'" data-min_qty="'.$row->min_qty.'" value='.$row->id.'> <i class="fas fa-minus"></i></a>';
             
             $output .= '
             <tr data-id="'. $row->id_item.'">
@@ -183,7 +185,7 @@ class stockManagement extends Controller
              <td style="width: 20%;" >'.$row->nama_item.'</td>
              <td style="width: 15%;" >'.$row->qty.'</td>
              <td style="width: 15%;" >'.$row->min_qty.'</td>
-             <td style="width: 5%;" >'.$editButton.'</td>
+             <td style="width: 5%;" >'.$plusButton.'</td>
              <td style="width: 5%;" >'.$removeButton.'</td>
             </tr>
             ';
@@ -302,6 +304,66 @@ class stockManagement extends Controller
         
         //return response()->json(['view' => view('kategori', compact('kategori'))->render()]); 
      }
+    }
+    
+    public function plusStock(Request $request){
+        
+        log_activity_desktop::create([
+            'pic' => Auth::user()->name,
+            'tipe' => 3,
+            'keterangan' => Auth::user()->name." Telah Menambah Stok :"."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item."\nqty : ".$request->qty_plus."\nketerangan : ".$request->keterangan_plus,
+        ]);
+        
+        $request->validate([
+            'id' => 'required',
+            'id_item' => 'required',
+            'nama_item' => 'required',
+            'qty_plus' => 'required',
+            'keterangan_plus' => 'required',
+        ]);
+            
+        $produk = pos_stock_desktop::findOrfail($request->id);
+        $qty = $produk->qty;
+        
+        $produk->update([
+            'id_item' => $request->id_item,
+            'nama_item' => $request->nama_item,
+            'qty' => $request->qty_plus + $qty,
+            'updated_at' => Carbon::now(),
+        ]);
+            
+        return redirect('dashboardStockManagement');
+        
+    }
+    
+    public function minStock(Request $request){
+        
+        log_activity_desktop::create([
+            'pic' => Auth::user()->name,
+            'tipe' => 3,
+            'keterangan' => Auth::user()->name." Telah Mengurangi Stok :"."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item."\nqty : ".$request->qty_min."\nketerangan : ".$request->keterangan_min,
+        ]);
+        
+        $request->validate([
+            'id' => 'required',
+            'id_item' => 'required',
+            'nama_item' => 'required',
+            'qty_min' => 'required',
+            'keterangan_min' => 'required',
+        ]);
+            
+        $produk = pos_stock_desktop::findOrfail($request->id);
+        $qty = $produk->qty;
+        
+        $produk->update([
+            'id_item' => $request->id_item,
+            'nama_item' => $request->nama_item,
+            'qty' => $qty - $request->qty_min,
+            'updated_at' => Carbon::now(),
+        ]);
+            
+        return redirect('dashboardStockManagement');
+        
     }
     
 }

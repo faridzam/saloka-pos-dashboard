@@ -45,7 +45,7 @@
                         <select class="custom-select" onchange="yesnoCheck(this);" style="width: 49.5%; margin-bottom: 1rem;" id="store" name="store" required>
                           <option selected>-- Silahkan Pilih Store --</option>
                           @foreach ($stores as $store)
-                              <option value={{ $store->id_store }}>{{ $store->nama_store }}</option>
+                              <option value={{ $store->menu_store }}>{{ $store->nama_store }}</option>
                           @endforeach
                         </select>
                         
@@ -171,6 +171,8 @@
   "scrollCollapse": true,
   "paging":   false,
   "searching":   false,
+  "info":   false,
+  "ordering":   false,
   ajax: "{{ route('stockManagement.search')}}",
   columns: [
     { data: 'no_invoice' },
@@ -191,27 +193,6 @@
             document.getElementById("ifYes").style.display = "none";
         }
     }
-</script>
-
-<script>
-    $(document).on("click", ".open-modal", function () {
-     var eventId = $(this).data('id');
-     var eventItem = $(this).data('item');
-     var eventNama = $(this).data('nama');
-     var eventKategori = $(this).data('kategori');
-     var eventStore = $(this).data('store');
-     var eventHarga = $(this).data('harga');
-     var eventPajak = $(this).data('pajak');
-     var eventHargaJual = $(this).data('harga_jual');
-     $('#id').val( eventId );
-     $('#id_item').val( eventItem );
-     $('#nama_item').val( eventNama );
-     $('#id_kategori').val( eventKategori );
-     $('#id_store').val( eventStore );
-     $('#harga').val( eventHarga );
-     $('#pajak').val( eventPajak );
-     $('#harga_jual').val( eventHargaJual );
-    });
 </script>
 
 <script>
@@ -252,5 +233,77 @@
    });
   });
 </script>
+
+<script>
+    $(function () {
+        $('#addProdukStock-close').on('click', function () {
+            $('#addProdukStock').hide('hide');
+            $('body').removeClass('modal-open');
+            $('#addProdukStock').removeClass('show');
+            $('body').removeAttr('style');
+            $('#addProdukStock').removeAttr('aria-modal');
+            $('#addProdukStock').removeAttr('style', 'padding-right');
+            $('#addProdukStock').css('display', 'none');
+            $('#addProdukStock').attr('aria-hidden', true);
+            $('.modal-backdrop').remove();
+        })
+    })
+</script>
+
+<script>
+    $(function () {
+        $('#plusStock-close').on('click', function () {
+            $('#plusStock').hide('hide');
+            $('body').removeClass('modal-open');
+            $('#plusStock').removeClass('show');
+            $('body').removeAttr('style');
+            $('#plusStock').removeAttr('aria-modal');
+            $('#plusStock').removeAttr('style', 'padding-right');
+            $('#plusStock').css('display', 'none');
+            $('#plusStock').attr('aria-hidden', true);
+            $('.modal-backdrop').remove();
+        })
+    })
+</script>
+
+<script>
+    $(function () {
+        $('#minStock-close').on('click', function () {
+            $('#minStock').hide('hide');
+            $('body').removeClass('modal-open');
+            $('#minStock').removeClass('show');
+            $('body').removeAttr('style');
+            $('#minStock').removeAttr('aria-modal');
+            $('#minStock').removeAttr('style', 'padding-right');
+            $('#minStock').css('display', 'none');
+            $('#minStock').attr('aria-hidden', true);
+            $('.modal-backdrop').remove();
+        })
+    })
+</script>
+
+<script>
+    $(document).on("click", ".open-modal", function () {
+     var eventId = $(this).data('id');
+     var eventItem = $(this).data('item');
+     var eventNama = $(this).data('nama');
+     $('#id_plus').val( eventId );
+     $('#id_item_plus').val( eventItem );
+     $('#nama_item_plus').val( eventNama );
+    });
+</script>
+
+<script>
+    $(document).on("click", ".open-modal-min", function () {
+     var eventId = $(this).data('id');
+     var eventItem = $(this).data('item');
+     var eventNama = $(this).data('nama');
+     $('#id_min').val( eventId );
+     $('#id_item_min').val( eventItem );
+     $('#nama_item_min').val( eventNama );
+    });
+</script>
+
+
 
 @endpush

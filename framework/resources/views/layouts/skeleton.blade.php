@@ -6,17 +6,9 @@
   <title>@yield('title', 'Home') &mdash; {{ config('app.name') }}</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script
-  src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"
-  integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k="
-  crossorigin="anonymous"></script>
   
-    <!-- SweetAlert2 -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  
   @stack('styles')
 </head>
 
@@ -27,6 +19,19 @@
 <script src="{{ mix('js/manifest.js') }}"></script>
 <script src="{{ mix('js/vendor.js') }}"></script>
 <script src="{{ mix('js/app.js') }}"></script>
+<!--
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/datatables.js" type="text/javascript"></script>
+-->
+
+    <!-- Datatables -->
+    <script src="{{ asset('js/datatables.js') }}"></script>
+    <link href="{{ asset('css/datatables.css')}}" rel="stylesheet" />
+
+    <!-- swal -->
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
+    <link href="{{ asset('css/sweetalert2.css')}}" rel="stylesheet" />
+    
 @stack('scripts')
 </body>
 </html>

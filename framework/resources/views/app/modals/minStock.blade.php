@@ -3,22 +3,19 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Decrease Stock : </h5>
-                    <button id="minStock-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="exampleModalLabel">Min Stock : </h5>
+                    <button type="button"id="minStock-close" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="add-form" action="{{ route('dashboardMasterMenu.store') }}" method="POST">
+                    <form id="min-form" action="{{ route('stockManagement.minStock') }}" method="Get">
                         @csrf
-                        <input class="form-control mt-2" type="text" id="id_item" name="id_item" placeholder="id item">
-                        <input class="form-control mt-2" type="text" id="nama_item" name="nama_item" placeholder="nama item">
-                        <input class="form-control mt-2" type="text" id="id_kategori" name="id_kategori" placeholder="id kategori">
-                        <input class="form-control mt-2" type="text" id="id_store" name="id_store" placeholder="id store">
-                        <input class="form-control mt-2" type="number" id="harga" name="harga" placeholder="hpp">
-                        <input class="form-control mt-2" type="number" id="pajak" name="pajak" placeholder="pajak">
-                        <input class="form-control mt-2" type="number" id="harga_jual" name="harga_jual" placeholder="harga jual">
-                        <input class="form-control mt-2" type="number" id="isDell" name="isDell" value="0" hidden>
+                        <input class="form-control mt-2" type="text" id="id_min" name="id" placeholder="id" hidden>
+                        <input class="form-control mt-2" type="text" id="id_item_min" name="id_item" placeholder="id item" readonly>
+                        <input class="form-control mt-2" type="text" id="nama_item_min" name="nama_item" placeholder="nama item" readonly>
+                        <input class="form-control mt-2" type="number" id="qty_min" name="qty_min" placeholder="kuantitas">
+                        <input class="form-control mt-2" type="text" id="keterangan_min" name="keterangan_min" placeholder="Keterangan">
                         <button type="submit" class="btn btn-primary mt-2" id="submit-update-item">Add</button>
                     </form>
                 </div>

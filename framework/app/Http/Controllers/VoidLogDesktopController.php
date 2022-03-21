@@ -25,7 +25,9 @@ class VoidLogDesktopController extends Controller
         //
         
         $user  = Auth::user()->name;
-        $stores = pos_store_desktop::all();
+        $stores = pos_store_desktop::select('menu_store', 'nama_store')
+        ->distinct()
+        ->get();
         $dateNow = Carbon::now()->format('Y-m-d');
 
         return view('app.voidTransaksi', compact('user', 'stores', 'dateNow'));
@@ -111,7 +113,7 @@ class VoidLogDesktopController extends Controller
 
       if($store != '-- Silahkan Pilih Store --')
       {
-        $dataQuery = pos_activity_and_desktop::where('id_store', $store)
+        $dataQuery = pos_activity_and_desktop::where('menu_store', $store)
         ->whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
         ->orderBy('created_at', 'desc')
         ->pluck('no_invoice');
@@ -139,11 +141,8 @@ class VoidLogDesktopController extends Controller
       {
        foreach($dataTable as $row)
        {
-           if (Auth::user()->id == 1 or Auth::user()->id == 3) {
-               $voidButton = '<a class="btn bg-danger btn-primary border-0 voidRequest" data-toggle="modal" data-target="#invoiceGuard" data-id="'.$row->no_invoice.'" value="'.$row->no_invoice.'">void</a>';
-           } else {
-               $voidButton = '<a class="px-5"></a>';
-           }
+        
+        $voidButton = '<a class="btn bg-danger btn-primary border-0 voidRequest" data-toggle="modal" data-target="#invoiceGuard" data-id="'.$row->no_invoice.'" value="'.$row->no_invoice.'">void</a>';
         
         $output .= '
         <tr data-id="'. $row->no_invoice.'">
@@ -264,7 +263,7 @@ class VoidLogDesktopController extends Controller
         $storeID = pos_activity_and_desktop::where('no_invoice', $no_invoice)
         ->value('id_store');
         $store = pos_store_desktop::where('id_store', $storeID)
-        ->value('id_store');
+        ->value('menu_store');
         
         void_log_desktop::create([
             'no_invoice' => $no_invoice,

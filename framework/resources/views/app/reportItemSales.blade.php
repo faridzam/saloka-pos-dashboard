@@ -22,7 +22,7 @@
 @section('content')
   <section class="section">
     <div class="section-header">
-      <h1>Laporan Penjualan</h1>
+      <h1>Report Item Sales</h1>
     </div>
 
     <div class="section-body">
@@ -36,7 +36,7 @@
                         <select class="custom-select" style="width: 49.5%; margin-bottom: 1rem;" id="id_store" name="id_store" required>
                           <option selected>-- Silahkan Pilih Store --</option>
                           @foreach ($stores as $store)
-                              <option value={{ $store->id_store }}>{{ $store->nama_store }}</option>
+                              <option value={{ $store->menu_store }}>{{ $store->nama_store }}</option>
                           @endforeach
                         </select>
                       

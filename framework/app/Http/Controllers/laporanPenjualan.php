@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\pos_store_desktop;
+use App\pos_kasir_desktop;
 use App\log_activity_desktop;
 use Illuminate\Http\Request;
 use App\pos_activity_and_desktop;
@@ -23,7 +24,9 @@ class laporanPenjualan extends Controller
     {
         //
         $user  = Auth::user()->name;
-        $stores = pos_store_desktop::all();
+        $stores = pos_store_desktop::select('menu_store', 'nama_store')
+        ->distinct()
+        ->get();
         $dateNow = Carbon::now()->format('Y-m-d');
 
         return view('app.laporanPenjualan', compact('user', 'stores', 'dateNow'));
@@ -107,7 +110,7 @@ class laporanPenjualan extends Controller
 
       if($store != '-- Silahkan Pilih Store --')
       {
-        $dataQuery = pos_activity_and_desktop::where('id_store', $store)
+        $dataQuery = pos_activity_and_desktop::where('menu_store', $store)
         ->whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
         ->orderBy('created_at', 'desc')
         ->pluck('no_invoice');
@@ -137,8 +140,8 @@ class laporanPenjualan extends Controller
        {
         $output .= '
         <tr data-id="'. $row->no_invoice.'">
-         <th style="width: 20%;" scope="row">'.$row->no_invoice.'</th>
-         <td style="width: 10%;" >'.$row->id_kasir.'</td>
+         <td style="width: 20%;" data-value="'.$row->no_invoice.'" scope="row">'.$row->no_invoice.'</td>
+         <td style="width: 10%;" >'.pos_kasir_desktop::where('id', $row->id_kasir)->value('name').'</td>
          <td style="width: 20%;" >'.$row->metode.'</td>
          <td style="width: 20%;" >'."Rp. ".number_format($row->total_pembelian,0,",",".").'</td>
          <td style="width: 15%;" >'.date('d-m-Y', strtotime($row->created_at)).'</td>
@@ -171,7 +174,7 @@ class laporanPenjualan extends Controller
         $store = pos_store_desktop::where('id_store', $request->id_store)->value('nama_store');
         $from = $request->tanggalAwal." 00:00:00";
         $to = $request->tanggalAkhir." 23:59:59";
-        $invoices = pos_activity_and_desktop::where('id_store', $request->id_store)
+        $invoices = pos_activity_and_desktop::where('menu_store', $request->id_store)
         ->whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])
         ->pluck('no_invoice')
         ->toArray();

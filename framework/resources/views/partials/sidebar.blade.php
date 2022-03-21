@@ -21,6 +21,8 @@
       <ul class="dropdown-menu">
         <li>
           <a class="nav-link" href="dashboardMasterMenu">Menu</a>
+          <a class="nav-link" href="dashboardDiscount">Discount</a>
+          <a class="nav-link" href="dashboardSpecialPrice">Special Price</a>
         </li>
       </ul>
     </li>
@@ -64,7 +66,7 @@
       </ul>
     </li>
 
-    {{--<li class="menu-header">Users</li>
-    <li><a class="nav-link" href=""><i class="fas fa-users"></i> <span>Users</span></a></li>--}}
+    <li class="menu-header">Users</li>
+    <li><a class="nav-link" href="dashboardUsers"><i class="fas fa-users"></i> <span>Users</span></a></li>
   </ul>
 </aside>
