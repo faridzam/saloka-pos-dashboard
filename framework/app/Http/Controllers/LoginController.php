@@ -19,6 +19,9 @@ class LoginController extends Controller
     public function index()
     {
         //
+        if(Auth::check()){
+            return redirect('dashboard');
+        }
         return view('welcome');
     }
 
@@ -108,7 +111,7 @@ class LoginController extends Controller
             
             $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('dashboard');
         }
 
         return back()->with('loginError', 'login gagal!');

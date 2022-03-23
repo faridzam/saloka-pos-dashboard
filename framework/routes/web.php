@@ -16,7 +16,7 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-Route::get('/', [LoginController::class, 'index'])->middleware('guest')->name('login.page');
+Route::get('/', [LoginController::class, 'index'])->name('login.page');
 Route::post('/', [LoginController::class, 'authenticate'])->middleware('guest');
 Route::get('/logout', [LoginController::class, 'logout'])->middleware('auth');
 
