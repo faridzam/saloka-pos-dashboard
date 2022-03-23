@@ -28,6 +28,18 @@
     min-width: 100%;
     border-radius: 0;
 }
+
+    tbody {
+        display: block;
+        width: 100%;
+        max-height: 350px;
+        overflow-y: scroll;
+    }
+    table thead, table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
 </style>
 @endpush
 
@@ -45,16 +57,16 @@
             <div class="card">
                     <div class="card-body">
                     <label for="provi">Nama Store : </label></br>
-                      
+
                         <select class="custom-select" onchange="yesnoCheck(this);" style="width: 49.5%; margin-bottom: 1rem;" id="store" name="store" required>
                           <option selected>-- Silahkan Pilih Store --</option>
                           @foreach ($stores as $store)
                               <option value={{ $store->menu_store }}>{{ $store->nama_store }}</option>
                           @endforeach
                         </select>
-                        
+
                         </br>
-                        
+
                         <select class="custom-select kategori-select" style="display:none;" style="width: 49.5%; margin-bottom: 1rem;" id="ifYes" name="id_kategori" required>
                           <option selected>-- Silahkan Pilih Kategori --</option>
                           <optgroup id="opt-group-category"></optgroup>
@@ -62,12 +74,12 @@
                               <option value={{ $value->id_kategori }}>{{ $value->nama_kategori }}</option>
                             @endforeach--}}
                         </select>
-                      
+
                         <div class="form-group">
 
                         </div>
                         <div class="form-group">
-                        <table id="tableIndex" class="table table-striped table-bordered display nowrap" style="width: 100%">
+                        <table id="tableIndex" class="table table-striped table-bordered display nowrap sortable">
                           <thead clas="bg-dark">
                             <tr>
                               <th style="width: 10%;">ID Item</th>
@@ -80,17 +92,6 @@
                             </tr>
                           </thead>
                           <tbody></tbody>
-                          <tfoot >
-                            <tr>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                            </tr>
-                          </tfoot>
                         </table>
                     </div>
 
@@ -100,7 +101,7 @@
                         <a type="button" class="btn btn-block btn-success" id="iExportSelect" data-toggle="modal" data-target="#addProduk"><i class="fas fa-file-export mr-2"></i>Tambah Produk</a>
                         </div>
                         {{-- <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                        <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>         
+                        <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>
                         </div> --}}
 
                         </div>
@@ -110,11 +111,11 @@
     </div>
     </div>
   </section>
-  
+
   <div class="modal-edit">
       @include('app.modals.editProduk')
   </div>
-  
+
   <div class="modal-add">
       @include('app.modals.addProduk')
   </div>
@@ -162,30 +163,6 @@
     var id_kategori = $('#ifYes').val();
     fetch_customer_data(id_store, id_kategori);
    });
-  });
-</script>
-
-<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
-
-<script>
-  $(document).ready(function () {
-  $('#tableIndex').DataTable({
-    "scrollY": "300px",
-    "scrollCollapse": true,
-    "paging":   false,
-    "searching":   false,
-    "info":   false,
-    "ordering":   false,
-  ajax: "{{ route('dashboardLaporanPenjualan.search')}}",
-  columns: [
-    { data: 'no_invoice' },
-    { data: 'id_kasir' },
-    { data: 'metode' },
-    { data: 'total_pembelian' },
-  ]
-  });
-  $('.dataTables_length').addClass('bs-select');
   });
 </script>
 
@@ -288,6 +265,17 @@
             $('.modal-backdrop').remove();
         })
     })
+</script>
+
+<link rel="stylesheet" href="https://drvic10k.github.io/bootstrap-sortable/Contents/bootstrap-sortable.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.js"></script>
+<script src="https://drvic10k.github.io/bootstrap-sortable/Scripts/bootstrap-sortable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<script>
+    $('.sortable').sortable();
 </script>
 
 @endpush

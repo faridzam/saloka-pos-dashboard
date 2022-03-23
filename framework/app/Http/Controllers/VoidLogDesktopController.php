@@ -23,7 +23,7 @@ class VoidLogDesktopController extends Controller
     public function index()
     {
         //
-        
+
         $user  = Auth::user()->name;
         $stores = pos_store_desktop::select('menu_store', 'nama_store')
         ->distinct()
@@ -98,7 +98,7 @@ class VoidLogDesktopController extends Controller
     {
         //
     }
-    
+
     public function search(Request $request)
     {
 
@@ -119,11 +119,11 @@ class VoidLogDesktopController extends Controller
         ->pluck('no_invoice');
 
         $dataTable = pos_activity_and_desktop::whereIn('no_invoice', $dataQuery)->get();
-        
+
         $voidTable = void_log_desktop::where('id_store', $store)
         ->whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
         ->get();
-        
+
       }
       else
       {
@@ -141,18 +141,18 @@ class VoidLogDesktopController extends Controller
       {
        foreach($dataTable as $row)
        {
-        
+        $namaKasir = pos_kasir_desktop::where('id', $row->id_kasir)->value('name');
         $voidButton = '<a class="btn bg-danger btn-primary border-0 voidRequest" data-toggle="modal" data-target="#invoiceGuard" data-id="'.$row->no_invoice.'" value="'.$row->no_invoice.'">void</a>';
-        
+
         $output .= '
         <tr data-id="'. $row->no_invoice.'">
-         <th style="width: 20%;" scope="row">'.$row->no_invoice.'</th>
-         <td style="width: 10%;" >'.$row->id_kasir.'</td>
-         <td style="width: 20%;" >'.$row->metode.'</td>
-         <td style="width: 20%;" >'."Rp. ".number_format($row->total_pembelian,0,",",".").'</td>
-         <td style="width: 15%;" >'.date('d-m-Y', strtotime($row->created_at)).'</td>
-         <td style="width: 15%;" >'.date('H:i:s', strtotime($row->created_at)).'</td>
-         <td id="void-invoice">'.$voidButton.'</td>
+         <td style="width: 15%; font-weight: bold;" scope="row" data-value="'.$row->no_invoice.'">'.$row->no_invoice.'</td>
+         <td style="width: 7%;" data-value="'.$namaKasir.'">'.$namaKasir.'</td>
+         <td style="width: 15%;" data-value="'.$row->metode.'">'.$row->metode.'</td>
+         <td style="width: 15%;" data-value="'.$row->total_pembelian.'">'."Rp. ".number_format($row->total_pembelian,0,",",".").'</td>
+         <td style="width: 15%;" data-value="'.date('d-m-Y', strtotime($row->created_at)).'">'.date('d-m-Y', strtotime($row->created_at)).'</td>
+         <td style="width: 15%;" data-value="'.date('H:i:s', strtotime($row->created_at)).'">'.date('H:i:s', strtotime($row->created_at)).'</td>
+         <td style="width: 5%;" id="void-invoice">'.$voidButton.'</td>
         </tr>
         ';
        }
@@ -165,7 +165,7 @@ class VoidLogDesktopController extends Controller
        </tr>
        ';
       }
-      
+
       //voidTable
       $total_row_void = $voidTable->count();
       if($total_row_void > 0)
@@ -174,13 +174,13 @@ class VoidLogDesktopController extends Controller
        {
         $outputVoid .= '
         <tr data-id="'. $row->no_invoice.'">
-         <th style="width: 20%;" scope="row">'.$row->no_invoice.'</th>
-         <td style="width: 10%;" >'.$row->kasir.'</td>
-         <td style="width: 10%;" >'.$row->pic.'</td>
-         <td style="width: 10%;" >'.$storeName.'</td>
-         <td style="width: 20%;" >'.$row->keterangan.'</td>
-         <td style="width: 15%;" >'.date('d-m-Y', strtotime($row->created_at)).'</td>
-         <td style="width: 15%;" >'.date('H:i:s', strtotime($row->created_at)).'</td>
+         <td style="width: 20%; font-weight: bold;" scope="row" data-value="'.$row->no_invoice.'">'.$row->no_invoice.'</td>
+         <td style="width: 10%;" data-value="'.$row->kasir.'">'.$row->kasir.'</td>
+         <td style="width: 10%;" data-value="'.$row->pic.'">'.$row->pic.'</td>
+         <td style="width: 10%;" data-value="'.$storeName.'">'.$storeName.'</td>
+         <td style="width: 20%;" data-value="'.$row->keterangan.'">'.$row->keterangan.'</td>
+         <td style="width: 15%;" data-value="'.date('d-m-Y', strtotime($row->created_at)).'">'.date('d-m-Y', strtotime($row->created_at)).'</td>
+         <td style="width: 15%;" data-value="'.date('H:i:s', strtotime($row->created_at)).'">'.date('H:i:s', strtotime($row->created_at)).'</td>
         </tr>
         ';
        }
@@ -193,8 +193,8 @@ class VoidLogDesktopController extends Controller
        </tr>
        ';
       }
-      
-      
+
+
       $data = array(
        'table_data'  => $output,
        'total_data'  => $total_row,
@@ -204,28 +204,28 @@ class VoidLogDesktopController extends Controller
       echo json_encode($data);
      }
     }
-    
+
     public function voidVerification(Request $request){
-        
-        $credentials = $request->validate([
+
+        $request->validate([
             'password' => 'required',
             'keterangan' => 'required'
         ]);
-        
+
         $user = Auth::user();
 
         if(Hash::check($request->password, $user->password)){
-            
+
             $kasirID = pos_activity_and_desktop::where('no_invoice', $request->no_invoice)
             ->value('id_kasir');
             $kasir = pos_kasir_desktop::where('id', $kasirID)
             ->value('name');
-            
+
             $storeID = pos_activity_and_desktop::where('no_invoice', $request->no_invoice)
             ->value('id_store');
             $store = pos_store_desktop::where('id_store', $storeID)
-            ->value('id_store');
-            
+            ->value('menu_store');
+
             void_log_desktop::create([
                 'no_invoice' => $request->no_invoice,
                 'kasir' => $kasir,
@@ -233,52 +233,52 @@ class VoidLogDesktopController extends Controller
                 'id_store' => $store,
                 'keterangan' => $request->keterangan,
             ]);
-            
+
             pos_activity_and_desktop::where('no_invoice', $request->no_invoice)
             ->delete();
-            
+
             $invoices = pos_activity_item_and_desktop::where('no_invoice', $request->no_invoice)->get();
             foreach ($invoices as $data){
-                
+
                 $data->isDell = 1;
                 $data->save();
-                
+
             }
 
             return redirect()->intended('dashboardVoidTransaksi')->with('success', 'login void sukses');
         }
-        
+
         return back()->with('failed', 'login void gagal');
-        
+
     }
-    
+
     public function voidInvoice(Request $request, $no_invoice){
         //
-        
+
         $kasirID = pos_activity_and_desktop::where('no_invoice', $no_invoice)
         ->value('id_kasir');
         $kasir = pos_kasir_desktop::where('id', $kasirID)
         ->value('name');
-        
+
         $storeID = pos_activity_and_desktop::where('no_invoice', $no_invoice)
         ->value('id_store');
         $store = pos_store_desktop::where('id_store', $storeID)
         ->value('menu_store');
-        
+
         void_log_desktop::create([
             'no_invoice' => $no_invoice,
             'kasir' => $kasir,
             'pic' => Auth::user()->name,
             'id_store' => $store,
         ]);
-        
+
         pos_activity_and_desktop::where('no_invoice', $no_invoice)
         ->delete();
         pos_activity_item_and_desktop::where('no_invoice', $no_invoice)
         ->delete();
-        
-        
+
+
         return redirect('dashboardVoidTransaksi');
     }
-    
+
 }

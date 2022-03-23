@@ -10,8 +10,9 @@
       data: {
       labels: ["{{ $monthName[5] }}", "{{ $monthName[4] }}", "{{ $monthName[3] }}", "{{ $monthName[2] }}", "{{ $monthName[1] }}", "{{ $monthName[0] }}"],
       datasets: [{
-    
+
         label: "Kedai Adu Tangkas",
+        tension: 0.5,
         data: [{{ $profitAduTangkas[0] }}, {{ $profitAduTangkas[1] }}, {{ $profitAduTangkas[2] }}, {{ $profitAduTangkas[3] }}, {{ $profitAduTangkas[4] }}, {{ $profitAduTangkas[5] }}, {{ $profitAduTangkas[6] }}],
         backgroundColor: [
           'rgba(105, 0, 132, .2)',
@@ -21,9 +22,10 @@
         ],
         borderWidth: 2
         },
-        
+
         {
         label: "Shop89",
+        tension: 0.5,
         data: [{{ $profit89[0] }}, {{ $profit89[1] }}, {{ $profit89[2] }}, {{ $profit89[3] }}, {{ $profit89[4] }}, {{ $profit89[5] }}, {{ $profit89[6] }}],
         backgroundColor: [
           'rgba(0, 119, 182, .2)',
@@ -31,11 +33,12 @@
         borderColor: [
           'rgba(3, 83, 164, .7)',
         ],
-        borderWidth: 2
+        borderWidth: 2,
         },
-        
+
         {
         label: "Food Truck Ararya",
+        tension: 0.5,
         data: [{{ $profitKingdom[0] }}, {{ $profitKingdom[1] }}, {{ $profitKingdom[2] }}, {{ $profitKingdom[3] }}, {{ $profitKingdom[4] }}, {{ $profitKingdom[5] }}, {{ $profitKingdom[6] }}],
         backgroundColor: [
           'rgba(249, 211, 113, 0.2)',
@@ -45,12 +48,12 @@
         ],
         borderWidth: 2
         },
-        
+
       ]},
       options: {
       responsive: true
       }
       });
     </script>
-    
+
 @endpush

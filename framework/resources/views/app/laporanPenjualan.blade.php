@@ -2,11 +2,19 @@
 
 @push('styles')
 <style>
-  table {
-  display: block;
-  height: 350px;
-  overflow-y: scroll;
-}
+
+    tbody {
+        display: block;
+        width: 100%;
+        max-height: 350px;
+        overflow-y: scroll;
+    }
+    table thead, table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
 </style>
 @endpush
 
@@ -25,34 +33,34 @@
                 <form id="formData" action="{{ route('dashboardLaporanPenjualan.export') }}" method="GET">
                     <div class="card-body">
                     <label for="provi">Nama Store : </label></br>
-                      
+
                         <select class="custom-select" style="width: 49.5%; margin-bottom: 1rem;" id="id_store" name="id_store" required>
                           <option selected>-- Silahkan Pilih Store --</option>
                           @foreach ($stores as $store)
                               <option value={{ $store->menu_store }}>{{ $store->nama_store }}</option>
                           @endforeach
                         </select>
-                      
-                           
+
+
                         <div class="row">
                         <div class="col-6">
                           <div class="form-group">
                             <label for="iNama">Tanggal Awal:</label>
                             <input type="text" class="form-control date" id="tanggalAwal" name="tanggalAwal" value="{{ $dateNow }}">
-                          </div>  
+                          </div>
                         </div>
                         <div class="col-6">
                           <div class="form-group">
                             <label for="iNama">Tanggal Akhir:</label>
                             <input type="text" class="form-control date" id="tanggalAkhir" name="tanggalAkhir" value="{{ $dateNow }}">
-                          </div> 
+                          </div>
                         </div>
                         </div>
                         <div class="form-group">
 
                         </div>
-                        <div class="form-group">
-                        <table id="tableIndex" class="table table-striped table-bordered display nowrap sortable" style="width: 100%">
+                        <div class="form-group" id="tableLaporan">
+                        <table id="tableIndex" class="table table-striped table-bordered display nowrap sortable" >
                           <thead clas="bg-dark">
                             <tr>
                               <th style="width: 20%;">No Invoice</th>
@@ -64,26 +72,22 @@
                             </tr>
                           </thead>
                           <tbody></tbody>
-                          <tfoot >
-                            <tr>
-                              <th style="width: 10%;"><h4>Profit: </h4></th>
-                              <th style="width: 20%%;"><h4 id="totalProfit" name="totalProfit"></h4></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                            </tr>
-                          </tfoot>
                         </table>
                     </div>
 
                     <div class="card-footer bg-whitesmoke">
-                        <div class="row justify-content-end">
-                        <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                        <button type="submit" class="btn btn-block btn-success" id="iExportSelect"><i class="fas fa-file-export mr-2"></i>Export</button>
-                        </div>
+                        <div class="row justify-content-between">
+
+                            <div class="mx-3 d-flex">
+                                <h4>Profit:</h4>
+                                <h4 class="mx-3" id="totalProfit" name="totalProfit"></h4>
+                            </div>
+
+                            <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
+                                <button type="submit" class="btn btn-block btn-success" id="iExportSelect"><i class="fas fa-file-export mr-2"></i>Export</button>
+                            </div>
                         {{-- <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                        <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>         
+                        <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>
                         </div> --}}
 
                         </div>
@@ -142,20 +146,6 @@
    });
   });
 </script>
-
-{{-- <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
-
-<script>
-  $(document).ready(function() {
-    $('#tableIndex').DataTable({
-    });
-  });
-</script> --}}
-
-<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
-
 
 <link rel="stylesheet" href="https://drvic10k.github.io/bootstrap-sortable/Contents/bootstrap-sortable.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>

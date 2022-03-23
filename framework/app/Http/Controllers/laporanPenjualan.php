@@ -117,7 +117,7 @@ class laporanPenjualan extends Controller
 
         $dataTable = pos_activity_and_desktop::whereIn('no_invoice', $dataQuery)
         ->get();
-        
+
         $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $dataQuery)
         ->where('isDell', 0)
         ->sum('total');
@@ -139,14 +139,14 @@ class laporanPenjualan extends Controller
        foreach($dataTable as $row)
        {
         $output .= '
-        <tr data-id="'. $row->no_invoice.'">
-         <td style="width: 20%;" data-value="'.$row->no_invoice.'" scope="row">'.$row->no_invoice.'</td>
-         <td style="width: 10%;" >'.pos_kasir_desktop::where('id', $row->id_kasir)->value('name').'</td>
-         <td style="width: 20%;" >'.$row->metode.'</td>
-         <td style="width: 20%;" >'."Rp. ".number_format($row->total_pembelian,0,",",".").'</td>
-         <td style="width: 15%;" >'.date('d-m-Y', strtotime($row->created_at)).'</td>
-         <td style="width: 15%;" >'.date('H:i:s', strtotime($row->created_at)).'</td>
-        </tr>
+            <tr data-id="'. $row->no_invoice.'">
+                <td style="width: 20%; font-weight: bold;" data-value="'.$row->no_invoice.'" scope="row">'.$row->no_invoice.'</td>
+                <td style="width: 10%;" data-value="'.pos_kasir_desktop::where('id', $row->id_kasir)->value('name').'">'.pos_kasir_desktop::where('id', $row->id_kasir)->value('name').'</td>
+                <td style="width: 20%;" data-value="'.$row->metode.'">'.$row->metode.'</td>
+                <td style="width: 20%;" data-value="'.$row->total_pembelian.'">'."Rp. ".number_format($row->total_pembelian,0,",",".").'</td>
+                <td style="width: 15%;" data-value="'.date('d-m-Y', strtotime($row->created_at)).'">'.date('d-m-Y', strtotime($row->created_at)).'</td>
+                <td style="width: 15%;" data-value="'.date('H:i:s', strtotime($row->created_at)).'">'.date('H:i:s', strtotime($row->created_at)).'</td>
+            </tr>
         ';
        }
       }
@@ -154,7 +154,8 @@ class laporanPenjualan extends Controller
       {
        $output = '
        <tr>
-        <td align="center" colspan="5">No Data Found</td>
+        <td align="center" colspan="5" style="width: 100%;">No Data Found</td>
+        <td align="center" colspan="5"></td>
        </tr>
        ';
       }
@@ -167,7 +168,7 @@ class laporanPenjualan extends Controller
       echo json_encode($data);
      }
     }
-    
+
     public function exportLaporanPenjualan(Request $request)
     {
 
@@ -182,7 +183,7 @@ class laporanPenjualan extends Controller
         ->where('isDell', 0)
         ->get();
         $user  = Auth::user()->name;
-        
+
         log_activity_desktop::create([
             'pic' => Auth::user()->name,
             'tipe' => 1,
@@ -195,7 +196,7 @@ class laporanPenjualan extends Controller
         $totalOmset = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
         ->where('isDell', 0)
         ->sum('total');
-        
+
         $conditions = array(
             'store' => $request->id_store,
             'user' => Auth::user()->name,

@@ -9,6 +9,17 @@
     margin: 2px auto;
     z-index: 1100 !important;
 }
+    tbody {
+        display: block;
+        width: 100%;
+        max-height: 350px;
+        overflow-y: scroll;
+    }
+    table thead, table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
 </style>
 @endpush
 
@@ -27,56 +38,45 @@
                 <form id="formData">
                     <div class="card-body">
                     <label for="provi">Nama Store : </label></br>
-                      
+
                         <select class="custom-select" style="width: 49.5%; margin-bottom: 1rem;" id="id_store" name="id_store" required>
                           <option selected>-- Silahkan Pilih Store --</option>
                           @foreach ($stores as $store)
                               <option value={{ $store->menu_store }}>{{ $store->nama_store }}</option>
                           @endforeach
                         </select>
-                      
-                           
+
+
                         <div class="row">
                         <div class="col-6">
                           <div class="form-group">
                             <label for="iNama">Tanggal Awal:</label>
                             <input type="text" class="form-control date" id="tanggalAwal" name="tanggalAwal" value="{{ $dateNow }}">
-                          </div>  
+                          </div>
                         </div>
                         <div class="col-6">
                           <div class="form-group">
                             <label for="iNama">Tanggal Akhir:</label>
                             <input type="text" class="form-control date" id="tanggalAkhir" name="tanggalAkhir" value="{{ $dateNow }}">
-                          </div> 
+                          </div>
                         </div>
                         </div>
                         <div class="form-group">
-                        <table id="tableIndex" class="table table-striped table-bordered display nowrap" style="width: 100%">
+                        <table id="tableIndex" class="table table-striped table-bordered display nowrap sortable">
                           <thead clas="bg-dark">
                             <tr>
-                              <th style="width: 20%;">No Invoice</th>
-                              <th style="width: 10%;">ID Kasir</th>
-                              <th style="width: 20%;">Metode Pembayaran</th>
-                              <th style="width: 20%;">Total Pendapatan</th>
+                              <th style="width: 15%;">No Invoice</th>
+                              <th style="width: 7%;">ID Kasir</th>
+                              <th style="width: 15%;">Metode Pembayaran</th>
+                              <th style="width: 15%;">Total Pendapatan</th>
                               <th style="width: 15%;">Tanggal</th>
                               <th style="width: 15%;">Jam</th>
-                              <th style="width: 15%;">Void</th>
+                              <th style="width: 5%;">Void</th>
                             </tr>
                           </thead>
                           <tbody id="transaksiVoid">
-                                
+
                           </tbody>
-                          <tfoot >
-                            <tr>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                            </tr>
-                          </tfoot>
                         </table>
                     </div>
 
@@ -86,18 +86,18 @@
                         <button type="submit" class="btn btn-block btn-success" id="iExportSelect"><i class="fas fa-file-export mr-2"></i>Export</button>
                         </div> --}}
                         {{-- <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                        <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>         
+                        <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>
                         </div> --}}
                         </div>
                     </div>
                 </form>
-                
+
                 <div class="section-header">
                   <h1>History Void</h1>
                 </div>
-                
+
                 <div class="form-group">
-                        <table id="tableIndex" class="table table-striped table-bordered display nowrap" style="width: 100%">
+                        <table id="tableIndex" class="table table-striped table-bordered display nowrap sortable">
                           <thead clas="bg-dark">
                             <tr>
                               <th style="width: 20%;">No Invoice</th>
@@ -110,23 +110,12 @@
                             </tr>
                           </thead>
                           <tbody id="voidTable">
-                                
+
                           </tbody>
-                          <tfoot >
-                            <tr>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                            </tr>
-                          </tfoot>
                         </table>
                     </div>
 
-                
+
             </div>
         </div>
     </div>
@@ -192,28 +181,15 @@
   });
 </script> --}}
 
-<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://drvic10k.github.io/bootstrap-sortable/Contents/bootstrap-sortable.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.js"></script>
+<script src="https://drvic10k.github.io/bootstrap-sortable/Scripts/bootstrap-sortable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
 <script>
-  $(document).ready(function () {
-  $('#tableIndex').DataTable({
-  "scrollY": "300px",
-  "scrollCollapse": true,
-  "paging":   false,
-  "searching":   false,
-  "info":   false,
-  "ordering":   false,
-  ajax: "{{ route('dashboardVoidTransaksi.search')}}",
-  columns: [
-    { data: 'no_invoice' },
-    { data: 'id_kasir' },
-    { data: 'metode' },
-    { data: 'total_pembelian' },
-  ]
-  });
-  $('.dataTables_length').addClass('bs-select');
-  });
+    $('.sortable').sortable();
 </script>
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

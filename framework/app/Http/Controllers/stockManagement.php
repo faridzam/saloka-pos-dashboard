@@ -26,7 +26,7 @@ class stockManagement extends Controller
         ->distinct()
         ->get();
         $dateNow = Carbon::now()->format('Y-m-d');
-        
+
         return view('app.stockManagement', compact('user', 'stores', 'dateNow'));
     }
 
@@ -49,13 +49,13 @@ class stockManagement extends Controller
     public function store(Request $request)
     {
         //
-        
+
         log_activity_desktop::create([
             'pic' => Auth::user()->name,
             'tipe' => 2,
             'keterangan' => Auth::user()->name." Telah Menambahkan Stok Produk:"."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item."\nqty : ".$request->qty,
         ]);
-            
+
         $request->validate([
             'id_store' => 'required',
             'id_item' => 'required',
@@ -63,7 +63,7 @@ class stockManagement extends Controller
             'qty' => 'required',
             'min_qty' => 'required',
         ]);
-        
+
         pos_stock_desktop::insertGetId([
             'id_store' => $request->id_store,
             'id_item' => $request->id_item,
@@ -73,9 +73,9 @@ class stockManagement extends Controller
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
-        
+
         return redirect('dashboardStockManagement');
-        
+
     }
 
     /**
@@ -122,15 +122,15 @@ class stockManagement extends Controller
     {
         //
     }
-    
+
     public function search(Request $request)
     {
 
      if($request->ajax())
      {
       $output = '';
-      $outputKategori = '';
-      
+      $outputKategori = '<option value="*">'."ALL".'</option>';
+
       $store = $request->get('id_store');
       $cat = $request->get('id_kategori');
 
@@ -138,26 +138,26 @@ class stockManagement extends Controller
       {
         $dataQuery = pos_product_item_desktop::where('id_store', $store)
         ->pluck('id_item');
-        
-        $kategoriQuery = pos_product_kategori_desktop::where('id_store', $store)
-        ->pluck('id_kategori');
-        
+
         $kategori = pos_product_kategori_desktop::where('id_store', $store)
         ->get();
 
-        $dataTables = pos_product_item_desktop::whereIn('id_item', $dataQuery)
-        ->where('id_kategori', $cat)
-        ->orderBy('id_item', 'asc')
-        ->pluck('id_item');
-        
+        if($cat == '*'){
+            $dataTables = pos_product_item_desktop::whereIn('id_item', $dataQuery)
+            ->orderBy('id_item', 'asc')
+            ->pluck('id_item');
+        } else {
+            $dataTables = pos_product_item_desktop::whereIn('id_item', $dataQuery)
+            ->where('id_kategori', $cat)
+            ->orderBy('id_item', 'asc')
+            ->pluck('id_item');
+        }
+
         $dataTable = pos_stock_desktop::whereIn('id_item', $dataTables)
         ->get();
-        
-        
+
         foreach ($kategori as $row){
-            $outputKategori .= '
-                <option value="'.$row->id_kategori.'">'.$row->nama_kategori.'</option>
-            ';
+            $outputKategori .= '<option value="'.$row->id_kategori.'">'.$row->nama_kategori.'</option>';
         }
       }
       else
@@ -169,8 +169,6 @@ class stockManagement extends Controller
         ';
       }
 
-      $token = $request->session()->token();
-
       $total_row = $dataTable->count();
       if($total_row > 0)
       {
@@ -178,13 +176,13 @@ class stockManagement extends Controller
        {
             $plusButton= '<a class="btn btn-primary btn-lg open-modal" data-toggle="modal" data-target="#plusStock" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-qty="'.$row->qty.'" data-min_qty="'.$row->min_qty.'" value='.$row->id.'> <i class="fas fa-plus"></i> </a>';
             $removeButton= '<a class="btn btn-danger btn-lg open-modal-min" data-toggle="modal" data-target="#minStock" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-qty="'.$row->qty.'" data-min_qty="'.$row->min_qty.'" value='.$row->id.'> <i class="fas fa-minus"></i></a>';
-            
+
             $output .= '
             <tr data-id="'. $row->id_item.'">
-             <th style="width: 10%;" scope="row">'.$row->id_item.'</th>
-             <td style="width: 20%;" >'.$row->nama_item.'</td>
-             <td style="width: 15%;" >'.$row->qty.'</td>
-             <td style="width: 15%;" >'.$row->min_qty.'</td>
+             <td style="width: 10%; font-weight: bold;" scope="row" data-value="'.$row->id_item.'">'.$row->id_item.'</td>
+             <td style="width: 20%;" data-value="'.$row->nama_item.'">'.$row->nama_item.'</td>
+             <td style="width: 15%;" data-value="'.$row->qty.'">'.$row->qty.'</td>
+             <td style="width: 15%;" data-value="'.$row->min_qty.'">'.$row->min_qty.'</td>
              <td style="width: 5%;" >'.$plusButton.'</td>
              <td style="width: 5%;" >'.$removeButton.'</td>
             </tr>
@@ -200,7 +198,7 @@ class stockManagement extends Controller
        </tr>
        ';
       }
-      
+
       $data = array(
        'table_data'  => $output,
        'total_data'  => $total_row,
@@ -210,56 +208,56 @@ class stockManagement extends Controller
       echo json_encode($data);
      }
     }
-    
+
     public function addStockAction(Request $request)
     {
 
      if($request->ajax())
      {
       $outputKategori = '';
-      
+
       $store = $request->get('id_store');
       $item = $request->get('id_item');
 
       if($store == '-- Silahkan Pilih Store --')
       {
-          
+
          $outputKategori = '
             <option value="">-- store belum dipilih --</option>
         ';
-        
+
         $id_item = '';
 
         $dataAdd = array(
             'kategori_data' => $outputKategori,
             'id_item' => $id_item
         );
-        
+
         echo json_encode($dataAdd);
-        
+
       }
       elseif ($item == '-- Silahkan Pilih Produk --') {
-          
+
           $exist = pos_stock_desktop::where('id_store', $store)
           ->pluck('id_item');
-          
+
             $kategori = pos_product_item_desktop::where('id_store', $store)
             ->whereNotIn('id_item', $exist)
             ->get();
-            
+
             foreach ($kategori as $row){
                 $outputKategori .= '
                     <option value="'.$row->id_item.'">'.$row->nama_item.'</option>
                 ';
             }
-            
+
             $id_item = '';
-            
+
         $dataAdd = array(
             'kategori_data' => $outputKategori,
             'id_item' => $id_item
         );
-        
+
         echo json_encode($dataAdd);
       }
       else{
@@ -271,10 +269,10 @@ class stockManagement extends Controller
         $selected = pos_product_item_desktop::where('id_store', $store)
         ->where('id_item', $item)
         ->first();
-        
+
         $selectedId = $selected->id_item;
         $selectedName = $selected->nama_item;
-        
+
           foreach ($kategori as $row){
               if($row->id_item != $item){
                 $outputKategori .= '
@@ -286,34 +284,34 @@ class stockManagement extends Controller
                 ';
               }
             }
-            
-            
+
+
             $dataAdd = array(
             'kategori_data' => $outputKategori,
             'id_item' => $selectedName
         );
-        
+
         echo json_encode($dataAdd);
       }
-      
+
       //return \View::make("app.masterMenu")
         //->with("kategori", $kategori)
         //->with("user", $user)
         //->with("stores", $stores)
         //->render();
-        
-        //return response()->json(['view' => view('kategori', compact('kategori'))->render()]); 
+
+        //return response()->json(['view' => view('kategori', compact('kategori'))->render()]);
      }
     }
-    
+
     public function plusStock(Request $request){
-        
+
         log_activity_desktop::create([
             'pic' => Auth::user()->name,
             'tipe' => 3,
             'keterangan' => Auth::user()->name." Telah Menambah Stok :"."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item."\nqty : ".$request->qty_plus."\nketerangan : ".$request->keterangan_plus,
         ]);
-        
+
         $request->validate([
             'id' => 'required',
             'id_item' => 'required',
@@ -321,29 +319,29 @@ class stockManagement extends Controller
             'qty_plus' => 'required',
             'keterangan_plus' => 'required',
         ]);
-            
+
         $produk = pos_stock_desktop::findOrfail($request->id);
         $qty = $produk->qty;
-        
+
         $produk->update([
             'id_item' => $request->id_item,
             'nama_item' => $request->nama_item,
             'qty' => $request->qty_plus + $qty,
             'updated_at' => Carbon::now(),
         ]);
-            
+
         return redirect('dashboardStockManagement');
-        
+
     }
-    
+
     public function minStock(Request $request){
-        
+
         log_activity_desktop::create([
             'pic' => Auth::user()->name,
             'tipe' => 3,
             'keterangan' => Auth::user()->name." Telah Mengurangi Stok :"."\nid item : ".$request->id_item."\nnama item : ".$request->nama_item."\nqty : ".$request->qty_min."\nketerangan : ".$request->keterangan_min,
         ]);
-        
+
         $request->validate([
             'id' => 'required',
             'id_item' => 'required',
@@ -351,19 +349,19 @@ class stockManagement extends Controller
             'qty_min' => 'required',
             'keterangan_min' => 'required',
         ]);
-            
+
         $produk = pos_stock_desktop::findOrfail($request->id);
         $qty = $produk->qty;
-        
+
         $produk->update([
             'id_item' => $request->id_item,
             'nama_item' => $request->nama_item,
             'qty' => $qty - $request->qty_min,
             'updated_at' => Carbon::now(),
         ]);
-            
+
         return redirect('dashboardStockManagement');
-        
+
     }
-    
+
 }

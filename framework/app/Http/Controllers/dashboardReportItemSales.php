@@ -96,7 +96,7 @@ class dashboardReportItemSales extends Controller
     {
         //
     }
-    
+
     public function search(Request $request)
     {
 
@@ -118,11 +118,11 @@ class dashboardReportItemSales extends Controller
         ->whereIn('no_invoice', $dataQuery)
         ->where('isDell', 0)
         ->get('id_item', 'nama_item', 'harga', 'qty', 'total', 'created_at');
-        
+
         $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $dataQuery)
         ->where('isDell', 0)
         ->sum('total');
-        
+
         $data = collect([]);
 
         foreach ($dataTable as $value) {
@@ -145,10 +145,10 @@ class dashboardReportItemSales extends Controller
             ->where('menu_store', $store)
             ->whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
             ->sum('total');
-            
+
             $data->push(['id_item'=>$id_item, 'nama_item'=>$nama_item, 'harga'=>$harga, 'qty'=>$quantity, 'total'=>$total]);
         }
-        
+
       }
       else
       {
@@ -168,11 +168,11 @@ class dashboardReportItemSales extends Controller
        {
         $output .= '
         <tr data-id="'.$row['id_item'].'">
-         <th style="width: 15%;" scope="row" >'.$row['id_item'].'</th>
-         <td style="width: 20%;" >'.$row['nama_item'].'</td>
-         <td style="width: 15%;" >'."Rp. ".number_format($row['harga'],0,",",".").'</td>
-         <td style="width: 10%;" >'.$row['qty'].'</td>
-         <td style="width: 15%;" >'."Rp. ".number_format($row['total'],0,",",".").'</td>
+         <td style="width: 15%; font-weight: bold;" scope="row" data-value"'.$row['id_item'].'">'.$row['id_item'].'</td>
+         <td style="width: 20%;" data-value"'.$row['nama_item'].'">'.$row['nama_item'].'</td>
+         <td style="width: 15%;" data-value"'.$row['harga'].'">'."Rp. ".number_format($row['harga'],0,",",".").'</td>
+         <td style="width: 10%;" data-value"'.$row['qty'].'">'.$row['qty'].'</td>
+         <td style="width: 15%;" data-value"'.$row['total'].'">'."Rp. ".number_format($row['total'],0,",",".").'</td>
         </tr>
         ';
        }
@@ -194,7 +194,7 @@ class dashboardReportItemSales extends Controller
       echo json_encode($data);
      }
     }
-    
+
     public function exportLaporanPenjualan(Request $request)
     {
 
@@ -209,7 +209,7 @@ class dashboardReportItemSales extends Controller
         ->where('isDell', 0)
         ->get();
         $user  = Auth::user()->name;
-        
+
         log_activity_desktop::create([
             'pic' => Auth::user()->name,
             'tipe' => 1,
@@ -222,7 +222,7 @@ class dashboardReportItemSales extends Controller
         $totalOmset = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
         ->where('isDell', 0)
         ->sum('total');
-        
+
         $conditions = array(
             'store' => $request->id_store,
             'user' => Auth::user()->name,
