@@ -12,7 +12,7 @@
         <i class="fas fa-columns"></i> <span>Dashboard</span>
       </a>
     </li>
-    
+
     <li class="nav-item dropdown" style="cursor: pointer;">
       <a class="nav-link has-dropdown" data-toggle="dropdown">
           <i class="fas fa-database"></i>
@@ -20,13 +20,15 @@
       </a>
       <ul class="dropdown-menu">
         <li>
-          <a class="nav-link" href="dashboardMasterMenu">Menu</a>
-          <a class="nav-link" href="dashboardDiscount">Discount</a>
-          <a class="nav-link" href="dashboardSpecialPrice">Special Price</a>
+          <a class="nav-link" href="dashboardMasterStore">Stores</a>
+          <a class="nav-link" href="dashboardMasterCategory">Categories</a>
+          <a class="nav-link" href="dashboardMasterMenu">Menus</a>
+          <a class="nav-link" href="dashboardDiscount">Discounts</a>
+          <a class="nav-link" href="dashboardSpecialPrice">Special Prices</a>
         </li>
       </ul>
     </li>
-    
+
     <li class="nav-item dropdown" style="cursor: pointer;">
       <a class="nav-link has-dropdown" data-toggle="dropdown">
           <i class="fas fa-cubes"></i>

@@ -11,21 +11,19 @@
                 <div class="modal-body">
                     <form id="add-form" action="{{ route('dashboardMasterMenu.store') }}" method="POST">
                         @csrf
-                        
+
                         <select class="custom-select mt-3" style="width: 49.85%;" id="add-store" name="id_store" required>
                           <option>-- Silahkan Pilih Store --</option>
                           @foreach ($stores as $store)
-                              <option value={{ $store->id_store }}>{{ $store->nama_store }}</option>
+                              <option value={{ $store->menu_store }}>{{ $store->nama_store }}</option>
                           @endforeach
                         </select>
-                        
+
                         <select class="custom-select kategori-select mt-3" style="width: 49.85%;" id="add-kategori" name="id_kategori" required>
                           <option>-- Silahkan Pilih Kategori --</option>
                           <optgroup id="add-group-category"></optgroup>
-                            {{--@foreach ($kategori as $value)
-                              <option value={{ $value->id_kategori }}>{{ $value->nama_kategori }}</option>
-                            @endforeach--}}
                         </select>
+
                         <label class="mt-3">ID Item :</label>
                         <input class="form-control" type="text" id="id_item" name="id_item" placeholder="id item">
                         <label class="mt-3">Nama Item :</label>

@@ -35,6 +35,12 @@ Route::resource('dashboardVoidTransaksi', VoidLogDesktopController::class)->midd
 Route::get('dashboardVoidTransaksi-search', 'VoidLogDesktopController@search')->name('dashboardVoidTransaksi.search')->middleware('auth');
 Route::post('authenticateVoid', 'VoidLogDesktopController@voidVerification')->name('void.verification')->middleware('auth')->middleware('roleChecker:void');
 
+Route::resource('dashboardMasterStore', masterStore::class)->middleware('auth');
+
+
+Route::resource('dashboardMasterCategory', masterCategory::class)->middleware('auth');
+
+
 Route::resource('dashboardMasterMenu', masterMenu::class)->middleware('auth');
 Route::get('dashboardMasterMenu-search','masterMenu@search')->name('masterMenu.search')->middleware('auth');
 Route::get('dashboardMasterMenu-addProductAction','masterMenu@addProductAction')->name('masterMenu.add.product.action')->middleware('auth');

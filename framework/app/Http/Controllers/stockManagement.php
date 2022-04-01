@@ -179,12 +179,12 @@ class stockManagement extends Controller
 
             $output .= '
             <tr data-id="'. $row->id_item.'">
-             <td style="width: 10%; font-weight: bold;" scope="row" data-value="'.$row->id_item.'">'.$row->id_item.'</td>
-             <td style="width: 20%;" data-value="'.$row->nama_item.'">'.$row->nama_item.'</td>
-             <td style="width: 15%;" data-value="'.$row->qty.'">'.$row->qty.'</td>
-             <td style="width: 15%;" data-value="'.$row->min_qty.'">'.$row->min_qty.'</td>
-             <td style="width: 5%;" >'.$plusButton.'</td>
-             <td style="width: 5%;" >'.$removeButton.'</td>
+                <td style="width: 10%; font-weight: bold;" scope="row" data-value="'.$row->id_item.'">'.$row->id_item.'</td>
+                <td style="width: 20%;" data-value="'.$row->nama_item.'">'.$row->nama_item.'</td>
+                <td style="width: 15%;" data-value="'.$row->qty.'">'.$row->qty.'</td>
+                <td style="width: 15%;" data-value="'.$row->min_qty.'">'.$row->min_qty.'</td>
+                <td style="width: 5%;" >'.$plusButton.'</td>
+                <td style="width: 5%;" >'.$removeButton.'</td>
             </tr>
             ';
 

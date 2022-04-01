@@ -8,6 +8,7 @@ class pos_store_desktop extends Model
 {
     //
     protected $fillable = [
+        'id',
         'id_store',
         'kode_store',
         'nama_store',

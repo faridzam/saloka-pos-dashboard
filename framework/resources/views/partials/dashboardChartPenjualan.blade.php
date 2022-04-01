@@ -5,6 +5,7 @@
     <script>
         //line
       var ctxL = document.getElementById("storeDevelopment").getContext('2d');
+
       var myLineChart = new Chart(ctxL, {
       type: 'line',
       data: {
