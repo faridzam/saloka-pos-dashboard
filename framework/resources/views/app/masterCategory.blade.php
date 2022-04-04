@@ -57,7 +57,7 @@
             <div class="card">
                     <div class="card-body">
 
-                        <select class="custom-select" onchange="yesnoCheck(this);" style="width: 49.5%; margin-bottom: 1rem;" id="store" name="store" required>
+                        <select class="custom-select" style="width: 100%; margin-bottom: 1rem;" id="store" name="store" required>
                           <option selected>-- Silahkan Pilih Store --</option>
                           @foreach ($stores as $store)
                               <option value={{ $store->menu_store }}>{{ $store->nama_store }}</option>
@@ -71,11 +71,10 @@
                         <table id="tableIndex" class="table table-striped table-bordered display nowrap sortable">
                           <thead clas="bg-dark">
                             <tr>
-                              <th style="width: 10%;">ID Item</th>
-                              <th style="width: 20%;">Nama Item</th>
-                              <th style="width: 15%;">HPP</th>
-                              <th style="width: 10%;">Pajak</th>
-                              <th style="width: 15%;">Harga Jual</th>
+                              <th style="width: 10%;">ID kategori</th>
+                              <th style="width: 20%;">Nama Kategori</th>
+                              <th style="width: 15%;">Store</th>
+                              <th style="width: 10%;">Jenis Kategori</th>
                               <th style="width: 5%;">Edit</th>
                               <th style="width: 5%;">Hapus</th>
                             </tr>
@@ -87,7 +86,7 @@
                     <div class="card-footer bg-whitesmoke">
                         <div class="row justify-content-end">
                         <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                        <a type="button" class="btn btn-block btn-success" id="iExportSelect" data-toggle="modal" data-target="#addProduk"><i class="fas fa-file-export mr-2"></i>Tambah Kategori</a>
+                        <a type="button" class="btn btn-block btn-success" id="iExportSelect" data-toggle="modal" data-target="#addCategory"><i class="fas fa-file-export mr-2"></i>Tambah Kategori</a>
                         </div>
                         {{-- <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
                         <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>
@@ -106,7 +105,7 @@
   </div>
 
   <div class="modal-add">
-      @include('app.modals.addProduk')
+      @include('app.modals.addCategory')
   </div>
 @endsection
 
@@ -126,43 +125,30 @@
 
    fetch_customer_data();
 
-   function fetch_customer_data(id_store = $('#store').val(), id_kategori = $('#ifYes').val())
+   function fetch_customer_data(id_store = $('#store').val())
    {
     $.ajax({
-     url:"dashboardMasterMenu-search",
+     url:"dashboardMasterCategory-search",
      method:'GET',
-     data:{id_store:id_store, id_kategori:id_kategori},
+     data:{id_store:id_store},
      dataType:'json',
      success:function(data)
      {
-        $('#opt-group-category').html(data.kategori_data);
         $('tbody').html(data.table_data);
         $('#total_records').text(data.total_data);
      }
     })
    }
 
-   $(document).on('change', 'input', function(){
+   $(document).on('change', '#store', function(){
     var id_store = $('#store').val();
-    var id_kategori = $('#ifYes').val();
-    fetch_customer_data(id_store, id_kategori);
+    fetch_customer_data(id_store);
    });
-   $(document).on('change', 'select', function(){
+   $(document).on('change', '#store', function(){
     var id_store = $('#store').val();
-    var id_kategori = $('#ifYes').val();
-    fetch_customer_data(id_store, id_kategori);
+    fetch_customer_data(id_store);
    });
   });
-</script>
-
-<script>
-    function yesnoCheck(that) {
-        if (that.value !== "-- Silahkan Pilih Store --") {
-            document.getElementById("ifYes").style.display = "inline-block";
-        } else {
-            document.getElementById("ifYes").style.display = "none";
-        }
-    }
 </script>
 
 <script>
@@ -188,40 +174,8 @@
 
 <script>
     function confirmation() {
-  return confirm('Yakin menghapus produk?');
+  return confirm('Yakin menghapus kategori?');
 }
-</script>
-
-<script>
-  $(document).ready(function(){
-
-   fetch_add_data();
-
-   function fetch_add_data(id_store = $('#add-store').val(), id_kategori = $('#add-kategori').val())
-   {
-    $.ajax({
-     url:"dashboardMasterMenu-addProductAction",
-     method:'GET',
-     data:{id_store:id_store, id_kategori:id_kategori},
-     dataType:'json',
-     success:function(data)
-     {
-        $('#add-group-category').html(data.kategori_data);
-     }
-    })
-   }
-
-   $(document).on('change', 'input', function(){
-    var id_store = $('#add-store').val();
-    var id_kategori = $('#add-kategori').val();
-    fetch_add_data(id_store, id_kategori);
-   });
-   $(document).on('change', 'select', function(){
-    var id_store = $('#add-store').val();
-    var id_kategori = $('#add-kategori').val();
-    fetch_add_data(id_store, id_kategori);
-   });
-  });
 </script>
 
 <script>

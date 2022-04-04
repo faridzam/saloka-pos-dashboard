@@ -37,8 +37,10 @@ Route::post('authenticateVoid', 'VoidLogDesktopController@voidVerification')->na
 
 Route::resource('dashboardMasterStore', masterStore::class)->middleware('auth');
 
-
 Route::resource('dashboardMasterCategory', masterCategory::class)->middleware('auth');
+Route::get('dashboardMasterCategory-search', 'masterCategory@search')->name('dashboardMasterCategory.search')->middleware('auth');
+Route::get('dashboardMasterCategory-destroy/{id}', 'masterCategory@destroyCategory')->name('dashboardMasterCategory.destroy')->middleware('auth');
+Route::get('dashboardMasterCategory-search-add', 'masterCategory@searchAdd')->name('dashboardMasterCategory.search.add')->middleware('auth');
 
 
 Route::resource('dashboardMasterMenu', masterMenu::class)->middleware('auth');

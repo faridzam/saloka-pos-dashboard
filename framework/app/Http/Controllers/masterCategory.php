@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\pos_store_desktop;
+use App\pos_product_kategori_desktop;
+use App\log_activity_desktop;
 
 class masterCategory extends Controller
 {
@@ -44,6 +46,32 @@ class masterCategory extends Controller
     public function store(Request $request)
     {
         //
+        $store = pos_store_desktop::where('id_store', $request->id_store)->value('nama_store');
+        
+        $request->validate([
+            'id_store' => 'required',
+            'jenis_kategori' => 'required',
+            'id_kategori' => 'required',
+            'nama_kategori' => 'required',
+        ]);
+
+        log_activity_desktop::create([
+            'pic' => Auth::user()->name,
+            'tipe' => 2,
+            'keterangan' => Auth::user()->name." Telah Menambahkan kategori :"."\nid kategori : ".$request->id_kategori."\nnama kategori : ".$request->nama_kategori."\nstore : ".$store,
+        ]);
+
+        pos_product_kategori_desktop::insertGetId([
+            'id_item' => $request->id_item,
+            'id_kategori' => $request->id_kategori,
+            'id_store' => $request->id_store,
+            'discount' => $request->discount,
+            'min_order' => 1,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        return redirect('dashboardMasterCategory');
     }
 
     /**
@@ -104,42 +132,16 @@ class masterCategory extends Controller
 
       if($store != '-- Silahkan Pilih Store --')
       {
-        $dataQuery = pos_product_item_desktop::where('id_store', $store)
-        ->pluck('id_item');
-
-        $kategoriQuery = pos_product_kategori_desktop::where('id_store', $store)
-        ->pluck('id_kategori');
-
-        $kategori = pos_product_kategori_desktop::where('id_store', $store)
+        
+        $dataTable = pos_product_kategori_desktop::where('id_store', $request->get('id_store'))
+        ->orderBy('nama_kategori', 'asc')
         ->get();
-
-        if($cat == '*'){
-
-            $dataTable = pos_product_item_desktop::whereIn('id_item', $dataQuery)
-            ->orderBy('id_item', 'asc')
-            ->get();
-
-        } else{
-
-            $dataTable = pos_product_item_desktop::whereIn('id_item', $dataQuery)
-            ->where('id_kategori', $cat)
-            ->orderBy('id_item', 'asc')
-            ->get();
-
-        }
-
-        foreach ($kategori as $row){
-            $outputKategori .= '
-                <option value="'.$row->id_kategori.'">'.$row->nama_kategori.'</option>
-            ';
-        }
-      }
-      else
-      {
+        
+      } else{
         $output = '
-        <tr>
+            <tr>
             <td align="center" colspan="5">Store Belum Dipilih</td>
-        </tr>
+            </tr>
         ';
       }
 
@@ -150,17 +152,28 @@ class masterCategory extends Controller
       {
        foreach($dataTable as $row)
        {
-            $editButton= '<a class="btn btn-primary btn-lg open-modal" href="'.route('dashboardMasterMenu.edit', $row->id).'" data-toggle="modal" data-target="#editProduk" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-kategori="'.$row->id_kategori.'" data-store="'.$row->id_store.'" data-harga="'.$row->harga.'" data-pajak="'.$row->pajak.'" data-harga_jual="'.$row->harga_jual.'" value='.$row->id.'> <i class="fas fa-edit"></i> </a>';
-            $removeButton= '<a class="remove-product" href="dashboardMasterMenu-destroy/'.$row->id.'" onclick="return confirmation();"><button class="btn btn-danger btn-lg remove-button" data-id="'.$row->id.'" data-nama="'.$row->nama_item.'"> <i class="fas fa-trash"></i> </button></a>';
+            /* $editButton= '<a class="btn btn-primary btn-lg open-modal" href="'.route('dashboardMasterMenu.edit', $row->id).'" data-toggle="modal" data-target="#editProduk" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-kategori="'.$row->id_kategori.'" data-store="'.$row->id_store.'" data-harga="'.$row->harga.'" data-pajak="'.$row->pajak.'" data-harga_jual="'.$row->harga_jual.'" value='.$row->id.'> <i class="fas fa-edit"></i> </a>'; */
+            $removeButton= '<a class="remove-category" href="dashboardMasterCategory-destroy/'.$row->id.'" onclick="return confirmation();"><button class="btn btn-danger btn-lg remove-button" data-id="'.$row->id.'" data-nama="'.$row->nama_item.'"> <i class="fas fa-trash"></i> </button></a>';
+            
+            $namaStore = pos_store_desktop::where('id_store', $row->id_store)->value('nama_store');
+            
+            if($row->id_kategori > 500){
+                $jenisKategori = 'non-konsumsi';
+            } elseif ($row->id_kategori % 2 == 0) {
+                $jenisKategori = 'makanan';
+            } elseif ($row->id_kategori % 2 != 0){
+                $jenisKategori = 'minuman';
+            } else{
+                $jenisKategori = 'lainnya';
+            }
 
             $output .= '
             <tr data-id="'. $row->id_item.'">
-             <td style="width: 10%;" scope="row" data-value="'.$row->id_item.'">'.$row->id_item.'</td>
-             <td style="width: 20%;" data-value="'.$row->nama_item.'">'.$row->nama_item.'</td>
-             <td style="width: 15%;" data-value="'.$row->hpp.'">'."Rp. ".number_format($row->hpp,0,",",".").'</td>
-             <td style="width: 10%;" data-value="'.$row->pajak.'">'."Rp. ".number_format($row->pajak,0,",",".").'</td>
-             <td style="width: 15%;" data-value="'.$row->harga_jual.'">'."Rp. ".number_format($row->harga_jual,0,",",".").'</td>
-             <td style="width: 5%;" >'.$editButton.'</td>
+             <td style="width: 10%;" scope="row" data-value="'.$row->id_kategori.'">'.$row->id_kategori.'</td>
+             <td style="width: 20%;" data-value="'.$row->nama_kategori.'">'.$row->nama_kategori.'</td>
+             <td style="width: 15%;" data-value="'.$namaStore.'">'.$namaStore.'</td>
+             <td style="width: 10%;" data-value="'.$jenisKategori.'">'.$jenisKategori.'</td>
+             <td style="width: 5%;" >'."...".'</td>
              <td style="width: 5%;" >'.$removeButton.'</td>
             </tr>
             ';
@@ -179,7 +192,6 @@ class masterCategory extends Controller
       $data = array(
        'table_data'  => $output,
        'total_data'  => $total_row,
-       'kategori_data' => $outputKategori,
       );
 
       echo json_encode($data);
@@ -192,6 +204,66 @@ class masterCategory extends Controller
 
         //return response()->json(['view' => view('kategori', compact('kategori'))->render()]);
      }
+    }
+    
+    public function searchAdd(Request $request)
+    {
+
+     if($request->ajax())
+     {
+        
+        if($request->jenis_kategori == 3){
+            $id_max = pos_product_kategori_desktop::where('id_kategori', '>', 500)
+            ->where('id_kategori', '<', 1000)
+            ->max('id_kategori');
+
+            $id_available = $id_max + 1;
+        } elseif ($request->jenis_kategori  == 2) {
+            $id_max = pos_product_kategori_desktop::whereRaw('(id_kategori % 2) != 0')
+            ->where('id_kategori', '<=', 500)
+            ->max('id_kategori');
+            
+            $id_available = $id_max + 2;
+        } elseif($request->jenis_kategori == 1){
+            $id_max = pos_product_kategori_desktop::whereRaw('(id_kategori % 2) == 0')
+            ->where('id_kategori', '<=', 500)
+            ->max('id_kategori');
+
+            $id_available = $id_max + 2;
+        } else{
+            $id_available = 'jenis kategori belum dipilih';
+        }
+        
+        
+      $dataAdd = array(
+       'id_kategori'  => $id_available,
+      );
+
+      echo json_encode($dataAdd);
+
+      //return \View::make("app.masterMenu")
+        //->with("kategori", $kategori)
+        //->with("user", $user)
+        //->with("stores", $stores)
+        //->render();
+
+        //return response()->json(['view' => view('kategori', compact('kategori'))->render()]);
+     }
+    }
+    
+    public function destroyCategory(Request $request, $id){
+
+         $data = pos_product_kategori_desktop::findOrfail($id);
+
+         log_activity_desktop::create([
+            'pic' => Auth::user()->name,
+            'tipe' => 4,
+            'keterangan' => Auth::user()->name." Telah Menghapus kategori :"."\nid : ".$id."\nid kategori : ".$data->id_kategori."\nnama kategori : ".$data->nama_kategori,
+        ]);
+
+        $data->delete();
+
+        return redirect('dashboardMasterCategory');
     }
 
 }
