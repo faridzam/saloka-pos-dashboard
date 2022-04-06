@@ -52,7 +52,7 @@
      dataType:'json',
      success:function(data)
      {
-        $('#id_kategori').val() = data[id_kategori];
+        $('input[name=id_kategori]').val(data.id_kategori);
      }
     })
    }

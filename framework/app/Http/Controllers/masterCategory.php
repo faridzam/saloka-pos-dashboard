@@ -62,11 +62,10 @@ class masterCategory extends Controller
         ]);
 
         pos_product_kategori_desktop::insertGetId([
-            'id_item' => $request->id_item,
             'id_kategori' => $request->id_kategori,
             'id_store' => $request->id_store,
-            'discount' => $request->discount,
-            'min_order' => 1,
+            'nama_kategori' => $request->nama_kategori,
+            'isDell' => 0,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -219,27 +218,29 @@ class masterCategory extends Controller
 
             $id_available = $id_max + 1;
         } elseif ($request->jenis_kategori  == 2) {
-            $id_max = pos_product_kategori_desktop::whereRaw('(id_kategori % 2) != 0')
+            $id_array = pos_product_kategori_desktop::whereRaw('(id_kategori % 2) != 0')
             ->where('id_kategori', '<=', 500)
-            ->max('id_kategori');
+            ->pluck('id_kategori')
+            ->toArray();
             
-            $id_available = $id_max + 2;
+            $id_available = max($id_array)+2;
         } elseif($request->jenis_kategori == 1){
-            $id_max = pos_product_kategori_desktop::whereRaw('(id_kategori % 2) == 0')
+            $id_array = pos_product_kategori_desktop::whereRaw('(id_kategori % 2) = 0')
             ->where('id_kategori', '<=', 500)
-            ->max('id_kategori');
+            ->pluck('id_kategori')
+            ->toArray();
 
-            $id_available = $id_max + 2;
+            $id_available = max($id_array)+2;
         } else{
             $id_available = 'jenis kategori belum dipilih';
         }
         
         
-      $dataAdd = array(
+      $data = array(
        'id_kategori'  => $id_available,
       );
 
-      echo json_encode($dataAdd);
+      echo json_encode($data);
 
       //return \View::make("app.masterMenu")
         //->with("kategori", $kategori)
