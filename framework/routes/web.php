@@ -41,6 +41,8 @@ Route::resource('dashboardMasterCategory', masterCategory::class)->middleware('a
 Route::get('dashboardMasterCategory-search', 'masterCategory@search')->name('dashboardMasterCategory.search')->middleware('auth');
 Route::get('dashboardMasterCategory-destroy/{id}', 'masterCategory@destroyCategory')->name('dashboardMasterCategory.destroy')->middleware('auth');
 Route::get('dashboardMasterCategory-search-add', 'masterCategory@searchAdd')->name('dashboardMasterCategory.search.add')->middleware('auth');
+Route::post('dashboardMasterCategory-update', 'masterCategory@updateCategory')->name('masterCategory.update')->middleware('auth');
+
 
 
 Route::resource('dashboardMasterMenu', masterMenu::class)->middleware('auth');

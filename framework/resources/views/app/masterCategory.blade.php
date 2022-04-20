@@ -101,7 +101,7 @@
   </section>
 
   <div class="modal-edit">
-      @include('app.modals.editProduk')
+      @include('app.modals.editCategory')
   </div>
 
   <div class="modal-add">
@@ -154,21 +154,13 @@
 <script>
     $(document).on("click", ".open-modal", function () {
      var eventId = $(this).data('id');
-     var eventItem = $(this).data('item');
      var eventNama = $(this).data('nama');
      var eventKategori = $(this).data('kategori');
      var eventStore = $(this).data('store');
-     var eventHarga = $(this).data('harga');
-     var eventPajak = $(this).data('pajak');
-     var eventHargaJual = $(this).data('harga_jual');
      $('#id').val( eventId );
-     $('#id_item').val( eventItem );
-     $('#nama_item').val( eventNama );
+     $('#nama_kategori').val( eventNama );
      $('#id_kategori').val( eventKategori );
      $('#id_store').val( eventStore );
-     $('#harga').val( eventHarga );
-     $('#pajak').val( eventPajak );
-     $('#harga_jual').val( eventHargaJual );
     });
 </script>
 

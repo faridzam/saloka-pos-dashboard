@@ -49,16 +49,16 @@ class users extends Controller
             'tipe' => 2,
             'keterangan' => Auth::user()->name." Telah Menambahkan User :"."\nusername : ".$request->name."\ntipe user : ".$request->tipe_user,
         ]);
-            
+
         $request->validate([
             'tipe_user' => 'required',
             'name' => 'required',
             'email' => 'required',
             'password' => 'required',
         ]);
-        
+
         if($request->tipe_user == 1){
-            
+
             pos_kasir_desktop::insertGetId([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -67,22 +67,23 @@ class users extends Controller
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
-            
+
         } elseif ($request->tipe_user == 2) {
-            
+
             User::insertGetId([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
+                'role' => $request->role,
                 'email_verified_at' => Carbon::now(),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
-            
+
         } else {
             return redirect()->back();
         }
-        
+
         return redirect('dashboardUsers');
     }
 
@@ -130,20 +131,20 @@ class users extends Controller
     {
         //
     }
-    
+
     public function search(Request $request)
     {
 
      if($request->ajax())
      {
       $output = '';
-      
+
       $userType = $request->get('userType');
 
       if($userType == 'kasir')
       {
         $dataTable = pos_kasir_desktop::where('name', '!=', 'faridzam')->get();
-        
+
         $total_row = $dataTable->count();
           if($total_row > 0)
           {
@@ -151,7 +152,7 @@ class users extends Controller
            {
                 $plusButton= '<a class="btn btn-primary btn-lg open-modal" data-toggle="modal" data-target="#plusStock" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-qty="'.$row->qty.'" data-min_qty="'.$row->min_qty.'" value='.$row->id.'> <i class="fas fa-edit"></i> </a>';
                 $removeButton= '<a class="btn btn-danger btn-lg remove-user" href="dashboardUsers-destroyKasir/'.$row->id.'" id="remove-user" onclick="return confirmation();" data-id="'.$row->id.'" value='.$row->id.'> <i class="fas fa-trash"></i></a>';
-                
+
                 $output .= '
                 <tr data-id="'.$row->id.'">
                  <th style="width: 40%;" scope="row">'.$row->name.'</th>
@@ -160,7 +161,7 @@ class users extends Controller
                  <td style="width: 15%;" >'.$removeButton.'</td>
                 </tr>
                 ';
-    
+
            }
           }
           else
@@ -171,12 +172,12 @@ class users extends Controller
            </tr>
            ';
           }
-          
+
 
       }
       elseif ($userType == 'dashboard') {
           $dataTable = User::where('name', '!=', 'faridzam')->get();
-          
+
           $total_row = $dataTable->count();
           if($total_row > 0)
           {
@@ -184,7 +185,7 @@ class users extends Controller
            {
                 $plusButton= '<a class="btn btn-primary btn-lg open-modal" data-toggle="modal" data-target="#plusStock" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-qty="'.$row->qty.'" data-min_qty="'.$row->min_qty.'" value='.$row->id.'> <i class="fas fa-edit"></i> </a>';
                 $removeButton= '<a class="btn btn-danger btn-lg remove-user" href="dashboardUsers-destroyAdmin/'.$row->id.'" id="remove-user" onclick="return confirmation();" data-id="'.$row->id.'" value='.$row->id.'> <i class="fas fa-trash"></i></a>';
-                
+
                 $output .= '
                 <tr data-id="'.$row->id.'">
                  <th style="width: 40%;" scope="row">'.$row->name.'</th>
@@ -193,7 +194,7 @@ class users extends Controller
                  <td style="width: 15%;" >'.$removeButton.'</td>
                 </tr>
                 ';
-    
+
            }
           }
           else
@@ -204,7 +205,7 @@ class users extends Controller
            </tr>
            ';
           }
-      
+
       }
       else
       {
@@ -215,7 +216,7 @@ class users extends Controller
         </tr>
         ';
       }
-      
+
       $data = array(
        'table_data'  => $output,
       );
@@ -223,34 +224,34 @@ class users extends Controller
       echo json_encode($data);
      }
     }
-    
+
     public function destroyKasir(Request $request, $id){
-         
+
          $data = pos_kasir_desktop::findOrfail($id);
          log_activity_desktop::create([
             'pic' => Auth::user()->name,
             'tipe' => 4,
             'keterangan' => Auth::user()->name." Telah Menghapus User :"."\nid : ".$id."\nnama user : ".$data->name,
         ]);
-            
+
         $produk = pos_kasir_desktop::findOrfail($id);
         $produk->delete();
-        
+
         return redirect('dashboardUsers');
     }
-    
+
     public function destroyAdmin(Request $request, $id){
-         
+
          $data = User::findOrfail($id);
          log_activity_desktop::create([
             'pic' => Auth::user()->name,
             'tipe' => 4,
             'keterangan' => Auth::user()->name." Telah Menghapus User :"."\nid : ".$id."\nnama user : ".$data->name,
         ]);
-            
+
         $produk = User::findOrfail($id);
         $produk->delete();
-        
+
         return redirect('dashboardUsers');
     }
 }

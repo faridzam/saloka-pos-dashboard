@@ -12,19 +12,30 @@
                     <form id="create-form" action="{{ route('dashboardUsers.store') }}" method="POST"
                     oninput='password_confirmation.setCustomValidity(password_confirmation.value != password.value ? "Passwords do not match." : "")'>
                         @csrf
-                        
+
                         <select class="custom-select mt-3" id="tipe_user" name="tipe_user" required>
                           <option selected="">-- Silahkan Pilih Tipe User --</option>
                           <option value="1">Kasir</option>
                           <option value="2">Admin Dashboard</option>
                         </select>
-                        
+
                         <label class="mt-3">Nama User :</label>
                         <input class="form-control" type="text" id="name" name="name" placeholder="username" required>
                         <label class="mt-3">Email User :</label>
                         <input class="form-control" type="email" id="email" name="email" placeholder="email" required>
                         <label class="mt-3">Password :</label>
                         <input class="form-control" type="password" id="password" name="password" placeholder="password" required>
+
+                        <select class="custom-select mt-3" id="role" name="role" placeholder="user role">
+                            <option selected>-- Silahkan Pilih Hak Akses --</option>
+                            <option value="4" >FA-Admin</option>
+                            <option value="5" >FA-Staff</option>
+                            <option value="6" >IR-Admin</option>
+                            <option value="7" >IR-Staff</option>
+                            <option value="8" >FnB-Admin</option>
+                            <option value="9" >FnB-Staff</option>
+                        </select>
+
                         <label class="mt-3">Ulangi Password :</label>
                         <input class="form-control" type="password" id="password_confirmation" name="password_confirmation" placeholder="password confirmation" required>
                         <button type="submit" class="btn btn-lg btn-primary mt-5" id="submit-update-item">Create</button>
