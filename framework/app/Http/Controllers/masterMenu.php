@@ -222,7 +222,7 @@ class masterMenu extends Controller
             <tr data-id="'. $row->id_item.'">
              <td style="width: 10%;" scope="row" data-value="'.$row->id_item.'">'.$row->id_item.'</td>
              <td style="width: 20%;" data-value="'.$row->nama_item.'">'.$row->nama_item.'</td>
-             <td style="width: 15%;" data-value="'.$row->hpp.'">'."Rp. ".number_format($row->hpp,0,",",".").'</td>
+             <td style="width: 15%;" data-value="'.$row->harga.'">'."Rp. ".number_format($row->harga,0,",",".").'</td>
              <td style="width: 10%;" data-value="'.$row->pajak.'">'."Rp. ".number_format($row->pajak,0,",",".").'</td>
              <td style="width: 15%;" data-value="'.$row->harga_jual.'">'."Rp. ".number_format($row->harga_jual,0,",",".").'</td>
              <td style="width: 5%;" >'.$editButton.'</td>
