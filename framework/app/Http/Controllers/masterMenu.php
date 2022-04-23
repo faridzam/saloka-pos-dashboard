@@ -181,12 +181,14 @@ class masterMenu extends Controller
         if($cat == '*'){
 
             $dataTable = pos_product_item_desktop::whereIn('id_item', $dataQuery)
+            ->where('id_store', $store)
             ->orderBy('id_item', 'asc')
             ->get();
 
         } else{
 
             $dataTable = pos_product_item_desktop::whereIn('id_item', $dataQuery)
+            ->where('id_store', $store)
             ->where('id_kategori', $cat)
             ->orderBy('id_item', 'asc')
             ->get();

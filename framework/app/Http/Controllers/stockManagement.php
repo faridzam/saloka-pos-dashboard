@@ -144,10 +144,12 @@ class stockManagement extends Controller
 
         if($cat == '*'){
             $dataTables = pos_product_item_desktop::whereIn('id_item', $dataQuery)
+            ->where('id_store', $store)
             ->orderBy('id_item', 'asc')
             ->pluck('id_item');
         } else {
             $dataTables = pos_product_item_desktop::whereIn('id_item', $dataQuery)
+            ->where('id_store', $store)
             ->where('id_kategori', $cat)
             ->orderBy('id_item', 'asc')
             ->pluck('id_item');
@@ -176,9 +178,9 @@ class stockManagement extends Controller
        {
             $plusButton= '<a class="btn btn-primary btn-lg open-modal" data-toggle="modal" data-target="#plusStock" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-qty="'.$row->qty.'" data-min_qty="'.$row->min_qty.'" value='.$row->id.'> <i class="fas fa-plus"></i> </a>';
             $removeButton= '<a class="btn btn-danger btn-lg open-modal-min" data-toggle="modal" data-target="#minStock" data-id="'.$row->id.'" data-item="'.$row->id_item.'" data-nama="'.$row->nama_item.'" data-qty="'.$row->qty.'" data-min_qty="'.$row->min_qty.'" value='.$row->id.'> <i class="fas fa-minus"></i></a>';
-            
+
             if($row->qty < $row->min_qty){
-                
+
                 $output .= '
                 <tr data-id="'. $row->id_item.'">
                     <td style="width: 10%; font-weight: bold; background-color: red; color: white;" scope="row" data-value="'.$row->id_item.'">'.$row->id_item.'</td>
@@ -189,9 +191,9 @@ class stockManagement extends Controller
                     <td style="width: 5%; background-color: red; color: white;" >'.$removeButton.'</td>
                 </tr>
                 ';
-                
+
             } else{
-                
+
                 $output .= '
                 <tr data-id="'. $row->id_item.'">
                     <td style="width: 10%; font-weight: bold;" scope="row" data-value="'.$row->id_item.'">'.$row->id_item.'</td>
@@ -202,7 +204,7 @@ class stockManagement extends Controller
                     <td style="width: 5%;" >'.$removeButton.'</td>
                 </tr>
                 ';
-                
+
             }
 
        }
