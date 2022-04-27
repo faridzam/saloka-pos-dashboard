@@ -65,8 +65,9 @@
                             <tr>
                               <th style="width: 20%;">No Invoice</th>
                               <th style="width: 10%;">ID Kasir</th>
-                              <th style="width: 20%;">Metode Pembayaran</th>
-                              <th style="width: 20%;">Total Pendapatan</th>
+                              <th style="width: 10%;">Metode Pembayaran</th>
+                              <th style="width: 20%;">Items</th>
+                              <th style="width: 15%;">Total Pendapatan</th>
                               <th style="width: 15%;">Tanggal</th>
                               <th style="width: 15%;">Jam</th>
                             </tr>

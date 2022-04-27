@@ -121,6 +121,7 @@ class laporanPenjualan extends Controller
         $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $dataQuery)
         ->where('isDell', 0)
         ->sum('total');
+
       }
       else
       {
@@ -138,12 +139,24 @@ class laporanPenjualan extends Controller
       {
        foreach($dataTable as $row)
        {
+
+        $itemDetailData = pos_activity_item_and_desktop::select('no_invoice', 'nama_item', 'qty', 'total')
+        ->where('no_invoice', $row->no_invoice)
+        ->where('isDell', 0)
+        ->get();
+
+        $itemDetail = collect([]);
+        foreach ($itemDetailData as $value) {
+            $itemDetail->add('<li>'.$value->nama_item.' : '.$value->qty);
+        }
+
         $output .= '
             <tr data-id="'. $row->no_invoice.'">
                 <td style="width: 20%; font-weight: bold;" data-value="'.$row->no_invoice.'" scope="row">'.$row->no_invoice.'</td>
                 <td style="width: 10%;" data-value="'.pos_kasir_desktop::where('id', $row->id_kasir)->value('name').'">'.pos_kasir_desktop::where('id', $row->id_kasir)->value('name').'</td>
-                <td style="width: 20%;" data-value="'.$row->metode.'">'.$row->metode.'</td>
-                <td style="width: 20%;" data-value="'.$row->total_pembelian.'">'."Rp. ".number_format($row->total_pembelian,0,",",".").'</td>
+                <td style="width: 10%;" data-value="'.$row->metode.'">'.$row->metode.'</td>
+                <td style="width: 20%;" >'.str_replace(array('[',']', '"', ','), '',$itemDetail).'</td>
+                <td style="width: 15%;" data-value="'.$row->total_pembelian.'">'."Rp. ".number_format($row->total_pembelian,0,",",".").'</td>
                 <td style="width: 15%;" data-value="'.date('d-m-Y', strtotime($row->created_at)).'">'.date('d-m-Y', strtotime($row->created_at)).'</td>
                 <td style="width: 15%;" data-value="'.date('H:i:s', strtotime($row->created_at)).'">'.date('H:i:s', strtotime($row->created_at)).'</td>
             </tr>

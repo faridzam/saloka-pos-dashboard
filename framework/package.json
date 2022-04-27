@@ -30,6 +30,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "apexcharts": "^3.35.0",
         "chart.js": "^3.7.1"
     }
 }

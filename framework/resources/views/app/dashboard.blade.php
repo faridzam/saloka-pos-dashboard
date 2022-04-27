@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @push('styles')
   <style>
-    .card-body{
-      height: 55vh !important;
-    }
     #storeDevelopment{
       max-height: 40vh !important;
       max-width: 32.3vw !important;
@@ -12,7 +9,7 @@
         display: flex;
     }
     #statistik-right{
-        
+
     }
     #totalPendapatan{
         position: relative;
@@ -101,8 +98,8 @@
           <div class="card-header">
             <h4>Statistik</h4>
           </div>
-          <div class="card-body row">
-              <div class="col-8" id="chartjs-penjualan">
+          <div class="card-body">
+              {{-- <div class="col-8" id="chartjs-penjualan">
                   @include('../partials/dashboardChartPenjualan')
               </div>
             <div class="col-4" id="statistik-right">
@@ -114,7 +111,15 @@
                     <p id="profit-bulan-ini" style="color:rgba(44, 46, 67, 0.8); height:100%; font-size: 12px;">pendapatan bulan ini : Rp. {{ number_format($profitBulanIni,0,",",".") }}</p>
                     <div class="flex-break"></div>
                 </div>
-            </div>
+            </div> --}}
+
+            <livewire:penjualan-chart/>
+
+            <livewire:scripts />
+            <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+
+            @livewireChartsScripts
+
           </div>
         </div>
       </div>
@@ -128,7 +133,7 @@
                   @foreach($historyAktif as $data)
                   <!-- loop -->
                   <li class="media">
-                      <img class="mr-3 rounded-circle" width="50" src="{{ asset('framework/public/assets/img/avatar-3.png') }}" alt="avatar">
+                      <img class="mr-3 rounded-circle" width="50" src="{{ asset('/assets/img/avatar-3.png') }}" alt="avatar">
                       <div class="media-body">
                         <div class="float-right text-primary" style="float-right">{{$data->created_at}}</div>
                         <div class="media-title">{{$data->pic}}</div>

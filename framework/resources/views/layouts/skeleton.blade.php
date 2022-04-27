@@ -6,10 +6,15 @@
   <title>@yield('title', 'Home') &mdash; {{ config('app.name') }}</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.0/apexcharts.js" integrity="sha512-MM/szA/VWoAf3/6BwunOUsfIbhhWPWp8x7afVPpX7f5JiuUhhn8UYD55Yt76CtfsSsjlE2n8nvWoTwhZF0W8Eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.0/apexcharts.css" integrity="sha512-oixucAoxoh4Eqk2ypTmfiOyhgDc582OqLweiVM4jbF680XtGzwf/Y7yftFs1O8DNdTeNnTbpPGRkNLIW9AxPuQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   @stack('styles')
+
+    <livewire:styles />
 </head>
 
 <body>
@@ -31,7 +36,11 @@
     <!-- swal -->
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <link href="{{ asset('css/sweetalert2.css')}}" rel="stylesheet" />
-    
+
+    <!-- livewire -->
+    <script src="{{ asset('vendor/livewire/livewire.js') }}"></script>
+    <script src="{{ asset('vendor/livewire-charts/app.js') }}"></script>
+
 @stack('scripts')
 </body>
 </html>

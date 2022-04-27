@@ -1,0 +1,20 @@
+{
+  "name": "saloka-pos-dashboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "chart.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faridzam/saloka-pos-dashboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/faridzam/saloka-pos-dashboard/issues"
+  },
+  "homepage": "https://github.com/faridzam/saloka-pos-dashboard#readme"
+}
