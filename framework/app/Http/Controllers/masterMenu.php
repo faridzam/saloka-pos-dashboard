@@ -74,18 +74,22 @@ class masterMenu extends Controller
             'isDell' => 'required',
         ]);
 
-        pos_product_item_desktop::insertGetId([
-            'id_item' => $request->id_item,
-            'nama_item' => $request->nama_item,
-            'id_kategori' => $request->id_kategori,
-            'id_store' => $request->id_store,
-            'harga' => $request->harga,
-            'pajak' => $request->pajak,
-            'harga_jual' => $request->harga_jual,
-            'isDell' => $request->isDell,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+        if (pos_product_item_desktop::where('id_item', $request->id_item)->where('id_store', $request->id_store )->exists()) {
+            return redirect()->back()->withErrors(['msg', 'The Message']);
+        }else{
+            pos_product_item_desktop::insertGetId([
+                'id_item' => $request->id_item,
+                'nama_item' => $request->nama_item,
+                'id_kategori' => $request->id_kategori,
+                'id_store' => $request->id_store,
+                'harga' => $request->harga,
+                'pajak' => $request->pajak,
+                'harga_jual' => $request->harga_jual,
+                'isDell' => $request->isDell,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+        }
 
         return redirect('dashboardMasterMenu');
     }

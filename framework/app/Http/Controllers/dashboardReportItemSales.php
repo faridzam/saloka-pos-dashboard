@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\pos_store_desktop;
 use App\log_activity_desktop;
+use App\pos_product_item_desktop;
 use Illuminate\Http\Request;
 use App\pos_activity_and_desktop;
 use Illuminate\Support\Facades\Auth;
@@ -131,10 +132,9 @@ class dashboardReportItemSales extends Controller
             ->where('isDell', 0)
             ->where('menu_store', $store)
             ->value('nama_item');
-            $harga = pos_activity_item_and_desktop::where('id_item', $value->id_item)
-            ->where('isDell', 0)
-            ->where('menu_store', $store)
-            ->value('harga');
+            $harga = pos_product_item_desktop::where('id_item', $value->id_item)
+            ->where('id_store', $store)
+            ->value('harga_jual');
             $quantity = pos_activity_item_and_desktop::where('id_item', $value->id_item)
             ->where('isDell', 0)
             ->where('menu_store', $store)

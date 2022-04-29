@@ -46,7 +46,16 @@
 @section('title', 'Admin Dashboard')
 
 @section('content')
+
   <section class="section">
+
+    @if (\Session::has('error'))
+        <div class="alert alert-danger alert-block" role="alert" style="position: absolute; width: 100%;z-index: 1001;">
+            <button class="close" data-dismiss="alert"></button>
+            <h3>{!! \Session::get('error') !!}</h3>
+        </div>
+    @endif
+
     <div class="section-header">
       <h1>Master Kategori</h1>
     </div>
@@ -211,6 +220,12 @@
 
 <script>
     $('.sortable').sortable();
+</script>
+
+<script>
+    $(".alert").fadeTo(5000, 500).slideUp(500, function(){
+        $(".alert").slideUp(500);
+    });
 </script>
 
 @endpush

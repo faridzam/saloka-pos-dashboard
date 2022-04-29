@@ -74,7 +74,7 @@
                     <div class="card-footer bg-whitesmoke">
                         <div class="row justify-content-between">
                             <div class="mx-3 d-flex">
-                                <h4>Profit:</h4>
+                                <h4>Omset:</h4>
                                 <h4 class="mx-3" id="totalProfit" name="totalProfit"></h4>
                             </div>
                             <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">

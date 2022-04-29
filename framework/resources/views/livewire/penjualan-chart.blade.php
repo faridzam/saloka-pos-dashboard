@@ -60,7 +60,7 @@
             />
         </div> --}}
 
-        <div class="shadow rounded p-4 border bg-white" style="height: 32rem;">
+        <div class="" style="height: 35vh;">
             <livewire:livewire-line-chart
                 key="{{ $multiLineChartModel->reactiveKey() }}"
                 :line-chart-model="$multiLineChartModel"

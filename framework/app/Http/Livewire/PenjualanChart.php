@@ -56,13 +56,13 @@ class PenjualanChart extends Component
     public function render()
     {
 
-        $datas = pos_activity_item_and_desktop::select('id', 'menu_store', 'total', 'created_at')->whereIn('menu_store', $this->types)
+        $datas = pos_activity_item_and_desktop::select('id', 'menu_store', 'total', 'created_at')
+        ->whereIn('menu_store', $this->types)
         ->get();
 
         $dateS = Carbon::now()->startOfMonth()->subMonth(5);
         $dateE = Carbon::now()->startOfMonth();
 
-        $dataBetween = $datas->whereBetween('created_at', [$dateS, $dateE])->get('created_at');
 
         // $columnChartModel = $datas->groupBy('menu_store')
         //     ->reduce(function ($columnChartModel, $data) {
@@ -125,7 +125,7 @@ class PenjualanChart extends Component
         //     );
 
         $multiLineChartModel = LivewireCharts::multiLineChartModel()
-            ->setTitle('Penjualan')
+            ->setTitle('Stores Income')
             ->setAnimated($this->firstRun)
             ->setSmoothCurve()
             ->multiLine()

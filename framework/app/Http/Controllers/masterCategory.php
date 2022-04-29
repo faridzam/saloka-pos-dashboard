@@ -46,31 +46,50 @@ class masterCategory extends Controller
     public function store(Request $request)
     {
         //
-        $store = pos_store_desktop::where('id_store', $request->id_store)->value('nama_store');
+        try {
 
-        $request->validate([
-            'id_store' => 'required',
-            'jenis_kategori' => 'required',
-            'id_kategori' => 'required',
-            'nama_kategori' => 'required',
-        ]);
+            $store = pos_store_desktop::where('id_store', $request->id_store)->value('nama_store');
 
-        log_activity_desktop::create([
-            'pic' => Auth::user()->name,
-            'tipe' => 2,
-            'keterangan' => Auth::user()->name." Telah Menambahkan kategori :"."\nid kategori : ".$request->id_kategori."\nnama kategori : ".$request->nama_kategori."\nstore : ".$store,
-        ]);
+            $validator = $request->validate([
+                'id_store' => 'required',
+                'jenis_kategori' => 'required',
+                'id_kategori' => 'required|numeric',
+                'nama_kategori' => 'required',
+            ]);
 
-        pos_product_kategori_desktop::insertGetId([
-            'id_kategori' => $request->id_kategori,
-            'id_store' => $request->id_store,
-            'nama_kategori' => $request->nama_kategori,
-            'isDell' => 0,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+            log_activity_desktop::create([
+                'pic' => Auth::user()->name,
+                'tipe' => 2,
+                'keterangan' => Auth::user()->name." Telah Menambahkan kategori :"."\nid kategori : ".$request->id_kategori."\nnama kategori : ".$request->nama_kategori."\nstore : ".$store,
+            ]);
 
-        return redirect('dashboardMasterCategory');
+            if ($validator) {
+
+                if (pos_product_kategori_desktop::where('id_kategori', $request->id_kategori)->exists()) {
+                    return redirect('dashboardMasterCategory')->with('error', 'Gagal menambahkan kategori! \n id kategori sudah ada');
+                } else {
+                    pos_product_kategori_desktop::insertGetId([
+                        'id_kategori' => $request->id_kategori,
+                        'id_store' => $request->id_store,
+                        'nama_kategori' => $request->nama_kategori,
+                        'isDell' => 0,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+
+            } else {
+                return redirect('dashboardMasterCategory')->with('error', 'Gagal menambahkan kategori! \n jenis kategori belum dipilih');
+            }
+
+            return redirect('dashboardMasterCategory');
+
+        } catch (\Throwable $th) {
+
+            return redirect('dashboardMasterCategory')->with('error', 'Gagal menambahkan kategori!');
+
+        }
+
     }
 
     /**
@@ -272,7 +291,7 @@ class masterCategory extends Controller
         $request->validate([
             'id' => 'required',
             'nama_kategori' => 'required',
-            'id_kategori' => 'required',
+            'id_kategori' => 'required|numeric',
             'id_store' => 'required',
         ]);
 
