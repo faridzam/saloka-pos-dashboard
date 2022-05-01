@@ -156,6 +156,7 @@ class stockManagement extends Controller
         }
 
         $dataTable = pos_stock_desktop::whereIn('id_item', $dataTables)
+        ->where('id_store', $store)
         ->get();
 
         foreach ($kategori as $row){

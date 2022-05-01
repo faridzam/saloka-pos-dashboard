@@ -8,6 +8,9 @@ use Carbon\Carbon;
 
 class OmsetHarian extends Component
 {
+
+    public $types = ['daily', 'weekly', 'monthly', 'year', 'all_time'];
+
     public function render()
     {
 
