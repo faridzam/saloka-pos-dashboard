@@ -40,7 +40,7 @@
     <!-- livewire -->
     <script src="{{ asset('vendor/livewire/livewire.js') }}"></script>
     <script src="{{ asset('vendor/livewire-charts/app.js') }}"></script>
-
+z
 @stack('scripts')
 </body>
 </html>

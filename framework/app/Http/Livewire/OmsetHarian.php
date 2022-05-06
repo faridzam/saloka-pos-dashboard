@@ -65,13 +65,13 @@ class OmsetHarian extends Component
             $this->omset = pos_activity_item_and_desktop::select('menu_store', 'isDell', 'created_at', 'total')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereBetween('created_at', [$dateS, $dateE])
+            ->where('created_at', '>=', $dateE)
             ->sum('total');
 
             $this->storeRevenue = pos_activity_item_and_desktop::groupBy('menu_store')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereBetween('created_at', [$dateS, $dateE])
+            ->where('created_at', '>=', $dateE)
             ->selectRaw('sum(total) as total_revenue, menu_store')
             ->orderBy('total_revenue', 'desc')
             ->get('total_revenue', 'menu_store');
@@ -83,13 +83,13 @@ class OmsetHarian extends Component
             $this->omset = pos_activity_item_and_desktop::select('menu_store', 'isDell', 'created_at', 'total')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereBetween('created_at', [$dateS, $dateE])
+            ->where('created_at', '>=', $dateE)
             ->sum('total');
 
             $this->storeRevenue = pos_activity_item_and_desktop::groupBy('menu_store')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereBetween('created_at', [$dateS, $dateE])
+            ->where('created_at', '>=', $dateE)
             ->selectRaw('sum(total) as total_revenue, menu_store')
             ->orderBy('total_revenue', 'desc')
             ->get('total_revenue', 'menu_store');
@@ -156,13 +156,13 @@ class OmsetHarian extends Component
             $this->omset = pos_activity_item_and_desktop::select('menu_store', 'isDell', 'created_at', 'total')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereBetween('created_at', [$dateS, $dateE])
+            ->where('created_at', '>=', $dateE)
             ->sum('total');
 
             $this->storeRevenue = pos_activity_item_and_desktop::groupBy('menu_store')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereBetween('created_at', [$dateS, $dateE])
+            ->where('created_at', '>=', $dateE)
             ->selectRaw('sum(total) as total_revenue, menu_store')
             ->orderBy('total_revenue', 'desc')
             ->get('total_revenue', 'menu_store');
@@ -174,13 +174,13 @@ class OmsetHarian extends Component
             $this->omset = pos_activity_item_and_desktop::select('menu_store', 'isDell', 'created_at', 'total')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereBetween('created_at', [$dateS, $dateE])
+            ->where('created_at', '>=', $dateE)
             ->sum('total');
 
             $this->storeRevenue = pos_activity_item_and_desktop::groupBy('menu_store')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereBetween('created_at', [$dateS, $dateE])
+            ->where('created_at', '>=', $dateE)
             ->selectRaw('sum(total) as total_revenue, menu_store')
             ->orderBy('total_revenue', 'desc')
             ->get('total_revenue', 'menu_store');

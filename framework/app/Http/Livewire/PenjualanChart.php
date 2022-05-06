@@ -130,7 +130,7 @@ class PenjualanChart extends Component
             ->setSmoothCurve()
             ->multiLine()
             ->setDataLabelsEnabled($this->showDataLabels)
-            //->setColors(['#169870', '#F39F19', '#0b4c38', '#0b4c38', '#107254', '#b67713', '#45ad8d', '#f5b247', '#73c1a9', '#f8c575', '#bf9860', '#f1241b', '#1e56af', '#604c30', '#79120e', '#0f2b58', '#8f7248', '#b51b14', '#164183', '#ccad80', '#f45049', '#4b78bf', '#d9c1a0', '#f77c76', '#789acf'])
+            //->setColors(['#2f4f4f', '#8b4513', '#006400', '#000080', '#ff0000', '#00ced1', '#ffa500', '#c71585', '#ffff00', '#00ff00', '#00fa9a', '#0000ff', '#ff00ff', '#eee8aa', '#6495ed'])
             ->addSeriesPoint('VW Long', Carbon::now()->subMonth(5)->format('F'), pos_activity_item_and_desktop::whereMonth('created_at', Carbon::now()->subMonth(5)->format('m'))->where('menu_store', 1)->sum('total'))
             ->addSeriesPoint('VW Long', Carbon::now()->subMonth(4)->format('F'), pos_activity_item_and_desktop::whereMonth('created_at', Carbon::now()->subMonth(4)->format('m'))->where('menu_store', 1)->sum('total'))
             ->addSeriesPoint('VW Long', Carbon::now()->subMonth(3)->format('F'), pos_activity_item_and_desktop::whereMonth('created_at', Carbon::now()->subMonth(3)->format('m'))->where('menu_store', 1)->sum('total'))

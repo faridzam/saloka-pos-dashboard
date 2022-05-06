@@ -1,4 +1,4 @@
-<div style="height: 100%" wire:poll>
+<div style="height: 100%">
     {{-- <div class="space-y-4 sticky top-0 bg-white p-4 shadow z-50">
         <ul class="flex flex-col sm:flex-row sm:space-x-8 sm:items-center">
             <li>
