@@ -1,4 +1,4 @@
-<div>
+<div style="height: 100%" wire:poll>
     {{-- <div class="space-y-4 sticky top-0 bg-white p-4 shadow z-50">
         <ul class="flex flex-col sm:flex-row sm:space-x-8 sm:items-center">
             <li>
@@ -60,7 +60,7 @@
             />
         </div> --}}
 
-        <div class="" style="height: 35vh;">
+        <div class="" style="height: 26.3rem;">
             <livewire:livewire-line-chart
                 key="{{ $multiLineChartModel->reactiveKey() }}"
                 :line-chart-model="$multiLineChartModel"

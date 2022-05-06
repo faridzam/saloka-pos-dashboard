@@ -25,6 +25,25 @@
         flex-basis: 100%;
         height: 0 !important;
     }
+
+    .break {
+        flex-basis: 100%;
+        height: 0;
+    }
+    @keyframes revenue-radio {
+        from {
+            color: #6c757d;
+        }
+        to {
+            color: #47c363;
+        }
+    }
+
+    .revenue-radio-item:checked + label{
+        color: #6777ef;
+        border-bottom: 5px solid #6777ef;
+    }
+
   </style>
 @endpush
 @section('title', 'Admin Dashboard')
@@ -96,7 +115,7 @@
       <div class="col-lg-8 col-md-12 col-12 col-sm-12">
         <div class="card">
           <div class="card-header">
-            <h4>Statistik</h4>
+            <h4>Grafik Penjualan</h4>
           </div>
           <div class="card-body">
               {{-- <div class="col-8" id="chartjs-penjualan">
@@ -114,7 +133,6 @@
             </div> --}}
 
             <livewire:penjualan-chart/>
-            <livewire:omset-harian/>
 
             <livewire:scripts />
             <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
@@ -124,10 +142,11 @@
           </div>
         </div>
       </div>
+
       <div class="col-lg-4 col-md-12 col-12 col-sm-12">
         <div class="card">
           <div class="card-header">
-            <h4>history</h4>
+            <h4>History</h4>
           </div>
           <div class="card-body" id="statistik-card">
             <ul class="list-unstyled list-unstyled-border" style="width:100%;">
@@ -147,18 +166,33 @@
           </div>
         </div>
       </div>
+
       <div class="col-lg-6 col-md-12 col-12 col-sm-12">
         <div class="card">
           <div class="card-header">
-            <h4>judul</h4>
+            <h4>Data Revenue</h4>
           </div>
           <div class="card-body">
             <ul class="list-unstyled list-unstyled-border">
-                {{-- code revenue --}}
+                <livewire:omset-harian/>
             </ul>
           </div>
         </div>
       </div>
+
+      <div class="col-lg-6 col-md-12 col-12 col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <h4>Data Item Sales</h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled list-unstyled-border">
+                {{-- cek aja --}}
+            </ul>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 @endsection
