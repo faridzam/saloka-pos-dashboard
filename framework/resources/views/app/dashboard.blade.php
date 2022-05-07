@@ -44,6 +44,11 @@
         border-bottom: 5px solid #6777ef;
     }
 
+    .item_sales-radio-item:checked + label{
+        color: #6777ef;
+        border-bottom: 5px solid #6777ef;
+    }
+
   </style>
 @endpush
 @section('title', 'Admin Dashboard')
@@ -187,7 +192,7 @@
           </div>
           <div class="card-body">
             <ul class="list-unstyled list-unstyled-border">
-                {{-- cek aja --}}
+                <livewire:item-sales/>
             </ul>
           </div>
         </div>

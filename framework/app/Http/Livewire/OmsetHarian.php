@@ -33,11 +33,6 @@ class OmsetHarian extends Component
 
     }
 
-    public function updatedProperty()
-    {
-        dd('change?'); // track changes here
-    }
-
     public function cekOmbak()
     {
 
@@ -105,7 +100,7 @@ class OmsetHarian extends Component
             $this->storeRevenue = pos_activity_item_and_desktop::groupBy('menu_store')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereYear('created_at', Carbon::now()->year)
+            ->where('created_at', '>=', Carbon::now()->subYear())
             ->selectRaw('sum(total) as total_revenue, menu_store')
             ->orderBy('total_revenue', 'desc')
             ->get('total_revenue', 'menu_store');
@@ -196,7 +191,7 @@ class OmsetHarian extends Component
             $this->storeRevenue = pos_activity_item_and_desktop::groupBy('menu_store')
             ->whereNotIn('isDell', [1])
             ->whereNotIn('menu_store', [20])
-            ->whereYear('created_at', Carbon::now()->year)
+            ->where('created_at', '>=', Carbon::now()->subYear())
             ->selectRaw('sum(total) as total_revenue, menu_store')
             ->orderBy('total_revenue', 'desc')
             ->get('total_revenue', 'menu_store');
