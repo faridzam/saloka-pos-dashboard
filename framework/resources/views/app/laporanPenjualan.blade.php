@@ -84,12 +84,10 @@
                                 <h4 class="mx-3" id="totalProfit" name="totalProfit"></h4>
                             </div>
 
-                            <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                                <button type="submit" class="btn btn-block btn-success" id="iExportSelect"><i class="fas fa-file-export mr-2"></i>Export</button>
+                            <div class="" style="display: flex; width: auto;">
+                                <button type="submit" class="btn btn-block btn-success" name="action" id="iExportSelect" style="margin-right: 1rem; margin-top: 0; width: 10rem" value="export"><i class="fas fa-file-export mr-2"></i>Export</button>
+                                <button type="submit" class="btn btn-block btn-warning" name="action" id="iExportAll" style="margin-top: 0; width: 10rem" value="exportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>
                             </div>
-                        {{-- <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                        <button type="button" class="btn btn-block btn-danger" id="iExportAll"><i class="fas fa-file-export mr-2"></i>Export All</button>
-                        </div> --}}
 
                         </div>
                     </div>

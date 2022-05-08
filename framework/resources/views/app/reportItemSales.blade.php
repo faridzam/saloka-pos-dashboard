@@ -77,8 +77,9 @@
                                 <h4>Omset:</h4>
                                 <h4 class="mx-3" id="totalProfit" name="totalProfit"></h4>
                             </div>
-                            <div class="col-sm-12 col-lg-2 mt-2 mt-lg-0">
-                                <button type="submit" class="btn btn-block btn-success" id="iExportSelect"><i class="fas fa-file-export mr-2"></i>Export</button>
+                            <div style="display: flex">
+                                <button type="submit" class="btn btn-block btn-success" name="action" id="iExportSelect" value="export" style="margin-right: 1rem; margin-top: 0; width: 10rem"><i class="fas fa-file-export mr-2"></i>Export</button>
+                                <button type="submit" class="btn btn-block btn-warning" name="action" id="iExportSelectAll" value="exportAll" style="margin-top: 0; width: 10rem"><i class="fas fa-file-export mr-2"></i>Export All</button>
                             </div>
                         </div>
                     </div>

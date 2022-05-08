@@ -11,6 +11,7 @@ use App\pos_activity_and_desktop;
 use Illuminate\Support\Facades\Auth;
 use App\pos_activity_item_and_desktop;
 use App\Exports\exportLaporanPenjualan;
+use App\Exports\exportLaporanPenjualanAll;
 use Maatwebsite\Excel\Facades\Excel;
 
 class laporanPenjualan extends Controller
@@ -125,11 +126,18 @@ class laporanPenjualan extends Controller
       }
       else
       {
-        $output = '
-        <tr>
-            <td align="center" colspan="5">Store Belum Dipilih</td>
-        </tr>
-        ';
+
+        $dataQuery = pos_activity_and_desktop::whereBetween('created_at', [$dateStart." 00:00:00", $dateEnd." 23:59:59"])
+        ->orderBy('created_at', 'desc')
+        ->pluck('no_invoice');
+
+        $dataTable = pos_activity_and_desktop::whereIn('no_invoice', $dataQuery)
+        ->get();
+
+        $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $dataQuery)
+        ->where('isDell', 0)
+        ->sum('total');
+
       }
 
       $token = $request->session()->token();
@@ -185,42 +193,110 @@ class laporanPenjualan extends Controller
     public function exportLaporanPenjualan(Request $request)
     {
 
-        $store = pos_store_desktop::where('id_store', $request->id_store)->value('nama_store');
         $from = $request->tanggalAwal." 00:00:00";
         $to = $request->tanggalAkhir." 23:59:59";
-        $invoices = pos_activity_and_desktop::where('menu_store', $request->id_store)
-        ->whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])
-        ->pluck('no_invoice')
-        ->toArray();
-        $datas = pos_activity_item_and_desktop::where('no_invoice', $invoices)
-        ->where('isDell', 0)
-        ->get();
-        $user  = Auth::user()->name;
+        $store = pos_store_desktop::where('id_store', $request->id_store)->value('nama_store');
 
-        log_activity_desktop::create([
-            'pic' => Auth::user()->name,
-            'tipe' => 1,
-            'keterangan' => Auth::user()->name." Telah Mengambil Laporan Penjualan :"."\nstore : ".$store."\ndari tanggal : ".$from."\nhingga tanggal : ".$to,
-        ]);
+        switch ($request->input('action')) {
+            case 'export':
 
-        $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
-        ->where('isDell', 0)
-        ->sum('profit');
-        $totalOmset = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
-        ->where('isDell', 0)
-        ->sum('total');
+                if ($store != '-- Silahkan Pilih Store --') {
+                    $invoices = pos_activity_and_desktop::where('menu_store', $request->id_store)
+                    ->whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])
+                    ->pluck('no_invoice')
+                    ->toArray();
 
-        $conditions = array(
-            'store' => $request->id_store,
-            'user' => Auth::user()->name,
-            'from' => $from,
-            'to' => $to,
-            'totalProfit' => $totalProfit,
-            'totalOmset' => $totalOmset,
-        );
+                    log_activity_desktop::create([
+                        'pic' => Auth::user()->name,
+                        'tipe' => 1,
+                        'keterangan' => Auth::user()->name." Telah Mengambil Laporan Penjualan :"."\nstore : ".$store."\ndari tanggal : ".$from."\nhingga tanggal : ".$to,
+                    ]);
 
-        $export = new exportLaporanPenjualan($conditions);
+                    $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
+                    ->where('isDell', 0)
+                    ->sum('profit');
+                    $totalOmset = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
+                    ->where('isDell', 0)
+                    ->sum('total');
 
-        return Excel::download($export, 'report-'.$store.'.xlsx');
+                    $conditions = array(
+                        'store' => $request->id_store,
+                        'user' => Auth::user()->name,
+                        'from' => $from,
+                        'to' => $to,
+                        'totalProfit' => $totalProfit,
+                        'totalOmset' => $totalOmset,
+                    );
+
+                    $export = new exportLaporanPenjualan($conditions);
+
+                    return Excel::download($export, 'report-'.$store.'.xlsx');
+                } else {
+                    $invoices = pos_activity_and_desktop::whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])
+                    ->pluck('no_invoice')
+                    ->toArray();
+
+                    log_activity_desktop::create([
+                        'pic' => Auth::user()->name,
+                        'tipe' => 1,
+                        'keterangan' => Auth::user()->name." Telah Mengambil Laporan Penjualan :"."\nstore : "."semuanya"."\ndari tanggal : ".$from."\nhingga tanggal : ".$to,
+                    ]);
+
+                    $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
+                    ->where('isDell', 0)
+                    ->sum('profit');
+                    $totalOmset = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
+                    ->where('isDell', 0)
+                    ->sum('total');
+
+                    $conditions = array(
+                        'user' => Auth::user()->name,
+                        'from' => $from,
+                        'to' => $to,
+                        'totalProfit' => $totalProfit,
+                        'totalOmset' => $totalOmset,
+                    );
+
+                    $export = new exportLaporanPenjualanAll($conditions);
+
+                    return Excel::download($export, 'report-'.'All'.'.xlsx');
+                }
+
+                break;
+
+            case 'exportAll':
+
+                $invoices = pos_activity_and_desktop::whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])
+                ->pluck('no_invoice')
+                ->toArray();
+
+                log_activity_desktop::create([
+                    'pic' => Auth::user()->name,
+                    'tipe' => 1,
+                    'keterangan' => Auth::user()->name." Telah Mengambil Laporan Penjualan :"."\nstore : "."semuanya"."\ndari tanggal : ".$from."\nhingga tanggal : ".$to,
+                ]);
+
+                $totalProfit = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
+                ->where('isDell', 0)
+                ->sum('profit');
+                $totalOmset = pos_activity_item_and_desktop::whereIn('no_invoice', $invoices)
+                ->where('isDell', 0)
+                ->sum('total');
+
+                $conditions = array(
+                    'user' => Auth::user()->name,
+                    'from' => $from,
+                    'to' => $to,
+                    'totalProfit' => $totalProfit,
+                    'totalOmset' => $totalOmset,
+                );
+
+                $export = new exportLaporanPenjualanAll($conditions);
+
+                return Excel::download($export, 'report-'.'All'.'.xlsx');
+
+                break;
+        }
+
     }
 }
