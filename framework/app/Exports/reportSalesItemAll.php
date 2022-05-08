@@ -42,17 +42,18 @@ class reportSalesItemAll implements FromCollection,WithHeadings,WithStyles,WithC
         $to = $con['to'];
         $store = $con['store'];
 
-        $data1 = pos_activity_item_and_desktop::distinct()
+        $data1 = pos_activity_item_and_desktop::select('id_item')
+        ->groupBy('id_item')
         ->where('isDell', 0)
         ->whereBetween('created_at', [$from, $to])
-        ->get(['id_item', 'nama_item']);
+        ->get();
 
         $data = collect([]);
         $totalQuantity = 0;
 
         foreach ($data1 as $value) {
             $id_item = $value->id_item;
-            $nama_item = $value->nama_item;
+            $nama_item = pos_activity_item_and_desktop::where('id_item', $value->id_item)->first()->nama_item;
             $quantity = pos_activity_item_and_desktop::where('id_item', $value->id_item)
             ->where('isDell', 0)
             ->whereBetween('created_at', [$from, $to])

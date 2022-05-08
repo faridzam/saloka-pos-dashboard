@@ -158,6 +158,7 @@ class dashboardReportItemSales extends Controller
         ->pluck('no_invoice');
 
         $dataTable = pos_activity_item_and_desktop::distinct()
+        ->groupBy('id_item')
         ->whereIn('no_invoice', $dataQuery)
         ->where('isDell', 0)
         ->get('id_item', 'nama_item', 'harga', 'qty', 'total', 'created_at');
