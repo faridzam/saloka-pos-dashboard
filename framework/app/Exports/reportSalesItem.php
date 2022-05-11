@@ -47,11 +47,12 @@ class reportSalesItem implements FromCollection,WithHeadings,WithStyles,WithColu
         ->where('menu_store', $store)
         ->where('isDell', 0)
         ->whereBetween('created_at', [$from, $to])
+        ->orderBy('nama_item', 'asc')
         ->get(['id_item', 'nama_item']);
-        
+
         $data = collect([]);
         $totalQuantity = 0;
-        
+
         foreach ($data1 as $value) {
             $id_item = $value->id_item;
             $nama_item = $value->nama_item;
@@ -65,10 +66,10 @@ class reportSalesItem implements FromCollection,WithHeadings,WithStyles,WithColu
             ->where('menu_store', $store)
             ->whereBetween('created_at', [$from, $to])
             ->sum('total');
-            
+
             $data->push(['id_item'=>$id_item, 'nama_item'=>$nama_item, 'qty'=>$quantity, 'total'=>$total]);
         }
-        
+
         return $data;
     }
 
@@ -102,12 +103,12 @@ class reportSalesItem implements FromCollection,WithHeadings,WithStyles,WithColu
     {
         return [
             'A' => 20,
-            'B' => 30,            
-            'C' => 10,            
-            'D' => 15,            
-            'E' => 15,            
-            'F' => 20,            
-            'G' => 20,            
+            'B' => 30,
+            'C' => 10,
+            'D' => 15,
+            'E' => 15,
+            'F' => 20,
+            'G' => 20,
         ];
     }
 
@@ -126,11 +127,11 @@ class reportSalesItem implements FromCollection,WithHeadings,WithStyles,WithColu
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-   
+
                 $event->sheet->getDelegate()->getStyle('A1:Z1048576')
                                 ->getAlignment()
                                 ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
-   
+
             },
         ];
     }

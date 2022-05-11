@@ -46,6 +46,7 @@ class reportSalesItemAll implements FromCollection,WithHeadings,WithStyles,WithC
         ->groupBy('id_item')
         ->where('isDell', 0)
         ->whereBetween('created_at', [$from, $to])
+        ->orderBy('nama_item', 'asc')
         ->get();
 
         $data = collect([]);
